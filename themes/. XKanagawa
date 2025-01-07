@@ -1,0 +1,36 @@
+! Terminal colors
+*.background: #1A1B26
+*.foreground: #C8C093
+*.cursorColor: #C8C093
+
+! Black
+*.color0: #1A1B26
+*.color8: #54546D
+
+! Red
+*.color1: #E46876
+*.color9: #E46876
+
+! Green
+*.color2: #A3BE8C
+*.color10: #A3BE8C
+
+! Yellow
+*.color3: #EED49F
+*.color11: #EED49F
+
+! Blue
+*.color4: #7FB4CA
+*.color12: #7FB4CA
+
+! Magenta
+*.color5: #957FB8
+*.color13: #957FB8
+
+! Cyan
+*.color6: #7FB4CA
+*.color14: #7FB4CA
+
+! White
+*.color7: #C8C093
+*.color15: #DCD7BA
