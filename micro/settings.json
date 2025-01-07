@@ -1,0 +1,16 @@
+{
+    "atuoindent": true,
+    "basename": true,
+    "colorscheme": "dukedark-tc",
+    "divchars": "|=",
+    "fileformat": "unix",
+    "matchbracestyle": "highlight",
+    "pluginchannels": [
+        "https://raw.githubusercontent.com/micro-editor/plugin-channel/master/channel.json"
+    ],
+    "pluginrepos": [],
+    "softwrap": true,
+    "statusformatl": " ● $(filename) $(modified) «$(line),$(col)» [$(opt:filetype)-$(opt:fileformat)-$(opt:encoding)]",
+    "statusformatr": "$(bind:ToggleKeyMenu):Bind, $(bind:ToggleHelp):Help",
+    "tabstospace": false
+}
