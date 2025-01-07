@@ -1,0 +1,26 @@
+XTerm*faceName: Fira Mono Nerd Font
+XTerm*faceSize: 10
+XTerm*cursorBlink: true
+XTerm*saveLines: 10000
+XTerm*utf8: true
+XTerm*termName: xterm-256color
+XTerm*VT100*scrollBar: false
+XTerm*scrollTtyOutput: false
+XTerm*bellIsUrgent: false
+XTerm*title: XTerm
+XTerm*selectToClipboard: true
+XTerm*highlightSelection: true
+XTerm*trimSelection: true
+XTerm*dynamicColors: true
+XTerm*allowTitleOps: true
+XTerm*colorMode: true
+XTerm*allowWindowOps: true
+
+XTerm*vt100.translations: #override \n\
+	  Ctrl <Key>-: smaller-vt-font() \n\
+    Ctrl <Key>+: larger-vt-font() \n\
+    Ctrl <Key>0: set-vt-font(d) \n\
+    Ctrl Shift <Key>C: copy-selection(CLIPBOARD) \n\
+	  Ctrl Shift <Key>V: insert-selection(CLIPBOARD)
+          
+!execute xrdb ~/.Xresources
