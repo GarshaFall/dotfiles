@@ -1,3 +1,39 @@
+! Colors
+*.foreground:  #D9E0EE  ! Text color
+*.background:  #1E1E2E  ! Background color
+*.cursorColor: #F9E2AF  ! Cursor color
+
+! Black
+*.color0:  #1E1E2E  ! Background
+*.color8:  #313244  ! Dark gray (inactive borders)
+
+! Red
+*.color1:  #F38BA8  ! Urgent/warnings
+*.color9:  #F38BA8  ! Bright red
+
+! Green
+*.color2:  #A6E3A1  ! Green (optional)
+
+! Yellow
+*.color3:  #F9E2AF  ! Yellow (informational)
+
+! Blue
+*.color4:  #89B4FA  ! Blue (links, accents)
+*.color12: #89B4FA  ! Bright blue
+
+! Magenta
+*.color5:  #C9CBFF  ! Magenta/Keywords
+*.color13: #C9CBFF  ! Bright magenta
+
+! Cyan
+*.color6:  #94E2D5  ! Cyan (optional)
+*.color14: #94E2D5  ! Bright cyan
+
+! White
+*.color7:  #D9E0EE  ! Light gray (text)
+*.color15: #E6E9EF  ! Bright white
+
+
 XTerm*faceName: Fira Mono Nerd Font
 XTerm*faceSize: 10
 XTerm*cursorBlink: true
