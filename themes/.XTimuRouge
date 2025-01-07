@@ -1,0 +1,34 @@
+! Colors
+*.foreground:  #D9E0EE
+*.background:  #1E1E2E
+*.cursorColor: #F9E2AF
+
+! Black
+*.color0:  #1E1E2E
+*.color8:  #313244
+
+! Red
+*.color1:  #F38BA8
+*.color9:  #F38BA8
+
+! Green
+*.color2:  #A6E3A1
+
+! Yellow
+*.color3:  #F9E2AF
+
+! Blue
+*.color4:  #89B4FA
+*.color12: #89B4FA
+
+! Magenta
+*.color5:  #C9CBFF
+*.color13: #C9CBFF
+
+! Cyan
+*.color6:  #94E2D5
+*.color14: #94E2D5
+
+! White
+*.color7:  #D9E0EE
+*.color15: #E6E9EF
