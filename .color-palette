@@ -1,0 +1,19 @@
+● Kanagawa Theme
+Background: #1A1B26 (very dark gray, almost black)
+Foreground text: #C8C093 (light gray or beige-like)
+Comments: #54546D (muted gray or brownish tone)
+Strings and emphasis: #EED49F (light yellow or tan)
+Keywords: #957FB8 (bright purple or magenta)
+Constants: #7FB4CA (light blue or cyan)
+Line highlight background: #2A2C3A (slightly lighter gray background for active lines)
+
+● Timu Rouge Theme
+Background: #1E1E2E (very dark gray/black).
+Foreground (text): #D9E0EE (light gray/off-white).
+Strings/Comments: #EBA0AC (muted red/light pink).
+Keywords/Functions: #C9CBFF (bright lavender/magenta).
+Highlighted Sections: #313244 (dark gray with a slight blue tone).
+Accent - Links/Headers: #89B4FA (soft blue).
+Accent - Warnings/Active: #F38BA8 (soft red).
+Accent - Informational Highlights: #F9E2AF (soft yellow).
+Inactive Borders/Mode Line: #6C7086 (medium gray).
