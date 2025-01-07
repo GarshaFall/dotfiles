@@ -1,0 +1,7 @@
+#+TITLE: Requirements for LINUX/BSD
+#+AUTHOR: GarshaFall
+
+* I3 Configuration
+#+BEGIN_SRC dot
+  sudo dnf install 
+#+END_SRC
