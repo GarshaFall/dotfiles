@@ -3,25 +3,13 @@
 
 * System
 #+BEGIN_SRC dot
- sudo dnf install git make cmake gcc clang python3-pip micro emacs xterm rofi picom papirus-icon-theme feh libtool alsa-firmware \
-pipewire-pulseaudio alsa-software rpmfusion-free-release
-sudo dnf remove pulseaudio pulseaudio-daemon
+sudo dnf install git make cmake gcc clang python3-pip micro emacs xterm rofi picom papirus-icon-theme feh libtool \
+alsa-firmware pipewire-pulseaudio alsa-software rpmfusion-free-release nodejs-bash-language-server llvm17 direnv \
+portaudio-devel alsa-lib-devel python3-devel alsa-utils w3m w3m-img chafa caca-utils
 #+END_SRC
 
 * Emacs
 #+BEGIN_SRC dot
- sudo dnf install nodejs-bash-language-server llvm17 direnv
- pip install pyright
+ pip install pyright portaudio pyaudio pydub
  sudo npm install -g tree-sitter-cli
-#+END_SRC 
-
-* Pyaudio & ALSA
-#+BEGIN_SRC dot
- sudo dnf install portaudio-devel alsa-lib-devel python3-devel alsa-lib alsa-utils
- pip install portaudio
 #+END_SRC
-
-* XTerm display image
-#+BEGIN_SRC dot
- sudo dnf install w3m w3m-img chafa caca-utils
-#+END_SRC 
