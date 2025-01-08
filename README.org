@@ -1,14 +1,15 @@
 #+TITLE: Requirements for LINUX/BSD
 #+AUTHOR: GarshaFall
 
-* System
+* Libs
+** System
 #+BEGIN_SRC dot
 sudo dnf install git make cmake gcc clang python3-pip micro emacs xterm rofi picom papirus-icon-theme feh libtool \
 alsa-firmware pipewire-pulseaudio alsa-software rpmfusion-free-release nodejs-bash-language-server llvm17 direnv \
 portaudio-devel alsa-lib-devel python3-devel alsa-utils w3m w3m-img chafa caca-utils
 #+END_SRC
 
-* Emacs
+** Emacs & PyAudio
 #+BEGIN_SRC dot
  pip install pyright portaudio pyaudio pydub
  sudo npm install -g tree-sitter-cli
