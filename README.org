@@ -3,7 +3,9 @@
 
 * System
 #+BEGIN_SRC dot
- sudo dnf install git make cmake gcc clang python3-pip micro emacs xterm rofi picom papirus-icon-theme feh libtool alsa-firmware
+ sudo dnf install git make cmake gcc clang python3-pip micro emacs xterm rofi picom papirus-icon-theme feh libtool alsa-firmware \
+pipewire-pulseaudio alsa-software rpmfusion-free-release
+sudo dnf remove pulseaudio pulseaudio-daemon
 #+END_SRC
 
 * Emacs
