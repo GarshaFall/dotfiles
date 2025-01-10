@@ -52,6 +52,7 @@ XTerm*dynamicColors: true
 XTerm*allowTitleOps: true
 XTerm*colorMode: true
 XTerm*allowWindowOps: true
+XTerm*trueColor: true
 
 XTerm*vt100.translations: #override \n\
 	  Ctrl <Key>-: smaller-vt-font() \n\
