@@ -36,6 +36,14 @@
 (setq vterm-shell "/bin/bash") ;; Use bash in vterm
 #+END_SRC
 
+** Ready Player
+(use-package ready-player
+  :ensure t
+  :config
+  (ready-player-mode +1)
+  (setq ready-player-set-global-bindings nil)
+)
+
 ** Dashboard
 #+BEGIN_SRC emacs-lisp
 (use-package dashboard
