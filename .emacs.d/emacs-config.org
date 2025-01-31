@@ -37,12 +37,14 @@
 #+END_SRC
 
 ** Ready Player
+#+BEGIN_SRC emacs-lisp
 (use-package ready-player
   :ensure t
   :config
   (ready-player-mode +1)
   (setq ready-player-set-global-bindings nil)
 )
+#+END_SRC
 
 ** Dashboard
 #+BEGIN_SRC emacs-lisp
