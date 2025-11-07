@@ -1,4 +1,3 @@
-```org
 #+TITLE: i3 Window Manager Configuration with Theme Switching
 #+AUTHOR: Generated from i3 Configuration
 #+DATE: {{{date(%Y-%m-%d)}}}
