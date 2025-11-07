@@ -17,16 +17,19 @@
     # Update system
     sudo dnf update
 
-    # Install essential packages
+    # Complete package installation including X11 utilities
     sudo dnf install \
-        xterm nemo firefox vlc feh micro emacs \
-        gcc gcc-c++ clang python3 python3-pip \
-        polybar rofi picom papirus-icon-theme \
-        htop neofetch arandr unzip lxappearance \
-        fontawesome-fonts fira-code-fonts \
-        flameshot xclip xsel \
-        network-manager-applet blueman pavucontrol \
-        dunst nitrogen git ripgrep fd-find fzf
+    xterm nemo firefox vlc feh micro emacs \
+    gcc gcc-c++ clang python3 python3-pip \
+    polybar rofi picom papirus-icon-theme \
+    htop neofetch arandr unzip lxappearance \
+    fontawesome-fonts fira-code-fonts \
+    flameshot xclip xsel \
+    network-manager-applet blueman pavucontrol \
+    dunst nitrogen git ripgrep fd-find fzf \
+    xorg-x11-utils xorg-x11-server-utils \
+    xdotool scrot xkill xauth \
+    xdpyinfo xprop xwininfo xrandr
 
     # Install media codecs
     sudo dnf install https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm
