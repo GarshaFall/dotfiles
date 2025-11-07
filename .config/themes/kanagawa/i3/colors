@@ -1,0 +1,23 @@
+# Kanagawa Theme Colors for i3
+# class                 border  background text    indicator
+client.focused          #2D4F67 #2D4F67 #dcd7ba #2D4F67
+client.focused_inactive #C0A36E #C0A36E #dcd7ba #C0A36E
+client.unfocused        #363646 #363646 #727169 #292d2e
+client.urgent           #FF5D62 #FF5D62 #dcd7ba #FF5D62
+client.placeholder      #1f1f28 #1f1f28 #727169 #1f1f28
+
+client.background       #1f1f28
+
+# Bar colors (for i3bar)
+bar {
+    colors {
+        background #1f1f28
+        statusline #dcd7ba
+        separator  #727169
+
+        focused_workspace  #2D4F67 #2D4F67 #dcd7ba
+        active_workspace   #C0A36E #C0A36E #dcd7ba
+        inactive_workspace #363646 #363646 #727169
+        urgent_workspace   #FF5D62 #FF5D62 #dcd7ba
+    }
+}
