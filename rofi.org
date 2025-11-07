@@ -1,0 +1,530 @@
+#+TITLE: Rofi Configuration with Tokyonight Theme
+#+AUTHOR: GarshaFall
+#+DESCRIPTION: Beautiful Tokyonight-inspired Rofi themes with theme switching
+#+DATE: {{{date(%Y-%m-%d)}}}
+
+* Rofi Configuration with Tokyonight Theme
+
+** Overview
+   This configuration provides beautiful Rofi theming using Tokyonight-inspired designs with seamless switching between Rouge and Kanagawa variants.
+
+** Directory Structure
+   #+BEGIN_SRC text
+   ~/.config/
+   ├── rofi/
+   │   ├── config.rasi              # Main configuration
+   │   └── theme.rasi               # Active theme (auto-updated)
+   └── themes/
+       ├── rouge/
+       │   └── rofi/
+       │       └── theme.rasi       # Rouge variant
+       └── kanagawa/
+           └── rofi/
+               └── theme.rasi       # Kanagawa variant
+   #+END_SRC
+
+** Main Rofi Configuration
+
+   Save as =~/.config/rofi/config.rasi=:
+
+   #+BEGIN_SRC css
+   /* Rofi Configuration */
+   @theme "theme"
+
+   configuration {
+       modi: "drun,run,window";
+       show-icons: true;
+       terminal: "alacritty";
+       drun-display-format: "{icon} {name}";
+       window-format: "{w} {i} {t}";
+   }
+
+   /* Window configuration */
+   window {
+       transparency: "real";
+       width: 40%;
+       location: center;
+       anchor: center;
+       y-offset: 0;
+       x-offset: 0;
+   }
+
+   /* Main box */
+   mainbox {
+       children: [inputbar, listview, message];
+   }
+
+   /* Input bar */
+   inputbar {
+       children: [prompt, entry];
+   }
+
+   prompt {
+       padding: 8px;
+   }
+
+   entry {
+       padding: 8px;
+   }
+
+   /* Listview */
+   listview {
+       scrollbar: false;
+       fixed-height: true;
+       dynamic: true;
+   }
+
+   /* Elements */
+   element {
+       padding: 8px;
+   }
+
+   element-icon {
+       size: 24px;
+   }
+
+   element selected {
+   }
+   #+END_SRC
+
+** Rouge Variant (Tokyonight Storm)
+
+   Save as =~/.config/themes/rouge/rofi/theme.rasi=:
+
+   #+BEGIN_SRC css
+   /**
+    * Rofi Tokyonight Storm Theme (Rouge Variant)
+    * Warm, rich burgundy theme
+    */
+
+   * {
+       bg0:  #1f1f28;
+       bg1:  #363646;
+       bg2:  #2a2a37;
+       fg:   #dcd7ba;
+       fg1:  #c8c093;
+       fg2:  #727169;
+       
+       red:    #8C3A3A;
+       orange: #A67A5B;
+       yellow: #B8A26D;
+       green:  #5A8E7F;
+       blue:   #2D4F67;
+       purple: #957FB8;
+       aqua:   #7FB4CA;
+       gray:   #727169;
+       
+       bg-col: @bg0;
+       bg-darker: @bg1;
+       bg-lighter: @bg2;
+       border-col: @blue;
+       selected-col: @blue;
+       blue-col: @blue;
+       fg-col: @fg;
+       fg-alt: @fg1;
+       fg-unimportant: @fg2;
+       accent: @red;
+       urgent: @orange;
+   }
+
+   window {
+       background-color: @bg-col;
+       border: 2px;
+       border-color: @border-col;
+       border-radius: 8px;
+   }
+
+   mainbox {
+       border: 0;
+       padding: 12px;
+   }
+
+   message {
+       border: 1px dash 0px 0px ;
+       border-color: @border-col;
+       background-color: @bg-col;
+       padding: 8px;
+   }
+
+   textbox {
+       text-color: @fg-col;
+   }
+
+   listview {
+       fixed-height: 0;
+       border: 0;
+       padding: 0px 0px 0px ;
+       background-color: @bg-col;
+   }
+
+   element {
+       border: 0;
+       padding: 4px;
+       background-color: @bg-col;
+       text-color: @fg-col;
+   }
+
+   element normal.normal {
+       background-color: @bg-col;
+       text-color: @fg-col;
+   }
+
+   element normal.urgent {
+       background-color: @urgent;
+       text-color: @bg-col;
+   }
+
+   element normal.active {
+       background-color: @blue-col;
+       text-color: @bg-col;
+   }
+
+   element selected.normal {
+       background-color: @selected-col;
+       text-color: @bg-col;
+       border-radius: 4px;
+   }
+
+   element selected.urgent {
+       background-color: @urgent;
+       text-color: @bg-col;
+       border-radius: 4px;
+   }
+
+   element selected.active {
+       background-color: @blue-col;
+       text-color: @bg-col;
+       border-radius: 4px;
+   }
+
+   element-icon {
+       size: 24px;
+       vertical-align: 0.5;
+   }
+
+   element-text {
+       vertical-align: 0.5;
+   }
+
+   inputbar {
+       spacing: 0;
+       padding: 8px;
+       background-color: @bg-col;
+       text-color: @fg-col;
+       border: 0;
+       children: [prompt,entry];
+   }
+
+   prompt {
+       background-color: @accent;
+       padding: 8px;
+       border-radius: 4px;
+       text-color: @bg-col;
+   }
+
+   entry {
+       padding: 8px;
+       background-color: @bg1;
+       text-color: @fg-col;
+       border-radius: 4px;
+   }
+
+   case-indicator {
+       background-color: @bg-col;
+       text-color: @fg-col;
+   }
+
+   error-message {
+       padding: 8px;
+       border-radius: 4px;
+       background-color: @red;
+       text-color: @bg-col;
+   }
+   #+END_SRC
+
+** Kanagawa Variant (Tokyonight Moon)
+
+   Save as =~/.config/themes/kanagawa/rofi/theme.rasi=:
+
+   #+BEGIN_SRC css
+   /**
+    * Rofi Tokyonight Moon Theme (Kanagawa Variant)
+    * Serene Japanese-inspired theme
+    */
+
+   * {
+       bg0:  #1f1f28;
+       bg1:  #363646;
+       bg2:  #2a2a37;
+       fg:   #dcd7ba;
+       fg1:  #c8c093;
+       fg2:  #727169;
+       
+       red:    #FF5D62;
+       orange: #C0A36E;
+       yellow: #E6C384;
+       green:  #98C379;
+       blue:   #2D4F67;
+       purple: #957FB8;
+       aqua:   #7FB4CA;
+       gray:   #727169;
+       
+       bg-col: @bg0;
+       bg-darker: @bg1;
+       bg-lighter: @bg2;
+       border-col: @blue;
+       selected-col: @blue;
+       blue-col: @blue;
+       fg-col: @fg;
+       fg-alt: @fg1;
+       fg-unimportant: @fg2;
+       accent: @orange;
+       urgent: @red;
+   }
+
+   window {
+       background-color: @bg-col;
+       border: 2px;
+       border-color: @border-col;
+       border-radius: 8px;
+   }
+
+   mainbox {
+       border: 0;
+       padding: 12px;
+   }
+
+   message {
+       border: 1px dash 0px 0px ;
+       border-color: @border-col;
+       background-color: @bg-col;
+       padding: 8px;
+   }
+
+   textbox {
+       text-color: @fg-col;
+   }
+
+   listview {
+       fixed-height: 0;
+       border: 0;
+       padding: 0px 0px 0px ;
+       background-color: @bg-col;
+   }
+
+   element {
+       border: 0;
+       padding: 4px;
+       background-color: @bg-col;
+       text-color: @fg-col;
+   }
+
+   element normal.normal {
+       background-color: @bg-col;
+       text-color: @fg-col;
+   }
+
+   element normal.urgent {
+       background-color: @urgent;
+       text-color: @bg-col;
+   }
+
+   element normal.active {
+       background-color: @blue-col;
+       text-color: @bg-col;
+   }
+
+   element selected.normal {
+       background-color: @selected-col;
+       text-color: @bg-col;
+       border-radius: 4px;
+   }
+
+   element selected.urgent {
+       background-color: @urgent;
+       text-color: @bg-col;
+       border-radius: 4px;
+   }
+
+   element selected.active {
+       background-color: @blue-col;
+       text-color: @bg-col;
+       border-radius: 4px;
+   }
+
+   element-icon {
+       size: 24px;
+       vertical-align: 0.5;
+   }
+
+   element-text {
+       vertical-align: 0.5;
+   }
+
+   inputbar {
+       spacing: 0;
+       padding: 8px;
+       background-color: @bg-col;
+       text-color: @fg-col;
+       border: 0;
+       children: [prompt,entry];
+   }
+
+   prompt {
+       background-color: @accent;
+       padding: 8px;
+       border-radius: 4px;
+       text-color: @bg-col;
+   }
+
+   entry {
+       padding: 8px;
+       background-color: @bg1;
+       text-color: @fg-col;
+       border-radius: 4px;
+   }
+
+   case-indicator {
+       background-color: @bg-col;
+       text-color: @fg-col;
+   }
+
+   error-message {
+       padding: 8px;
+       border-radius: 4px;
+       background-color: @red;
+       text-color: @bg-col;
+   }
+   #+END_SRC
+
+** Theme Switcher Integration
+
+*** Update Theme Switcher
+
+    Add to =~/.local/bin/theme-switcher=:
+
+    #+BEGIN_SRC bash
+    # Apply rofi theme
+    if [ -f "$theme_dir/rofi/theme.rasi" ]; then
+        mkdir -p ~/.config/rofi
+        cp "$theme_dir/rofi/theme.rasi" ~/.config/rofi/theme.rasi
+        echo "  → rofi theme applied"
+    fi
+    #+END_SRC
+
+** Installation
+
+*** 1. Create Directories
+    #+BEGIN_SRC bash
+    mkdir -p ~/.config/rofi
+    mkdir -p ~/.config/themes/{rouge,kanagawa}/rofi
+    #+END_SRC
+
+*** 2. Copy Configuration Files
+    - Main config: =~/.config/rofi/config.rasi=
+    - Rouge theme: =~/.config/themes/rouge/rofi/theme.rasi=
+    - Kanagawa theme: =~/.config/themes/kanagawa/rofi/theme.rasi=
+
+*** 3. Set Initial Theme
+    #+BEGIN_SRC bash
+    theme-switcher rouge
+    #+END_SRC
+
+** Visual Comparison
+
+*** Rouge Theme (Tokyonight Storm)
+    - =accent=: #8C3A3A (Burgundy red)
+    - =selected-col=: #2D4F67 (Wave blue)
+    - =urgent=: #A67A5B (Warm orange)
+    - *Appearance*: Rich, warm, elegant burgundy theme
+
+*** Kanagawa Theme (Tokyonight Moon)
+    - =accent=: #C0A36E (Autumn gold)
+    - =selected-col=: #2D4F67 (Wave blue)
+    - =urgent=: #FF5D62 (Sunrise red)
+    - *Appearance*: Serene, Japanese-inspired gold theme
+
+** Features
+
+*** Both Themes Include
+    - 40% width centered window
+    - Rounded corners (8px border radius)
+    - Icon support (24px size)
+    - Real transparency
+    - Three modes: drun, run, window
+    - Proper focus states
+    - Error message styling
+    - Alacritty as default terminal
+
+*** Color Systems
+    - Consistent dark background (#1f1f28)
+    - Parchment text colors (#dcd7ba)
+    - Theme-specific accent colors
+    - Proper contrast ratios
+    - Cohesive color hierarchies
+
+** Usage
+
+*** Theme Switching
+    #+BEGIN_SRC bash
+    theme-switcher rouge      # Switch to Rouge theme
+    theme-switcher kanagawa   # Switch to Kanagawa theme
+    theme-switcher next       # Cycle between themes
+    #+END_SRC
+
+*** Manual Testing
+    #+BEGIN_SRC bash
+    # Test Rouge theme
+    rofi -show drun -theme ~/.config/themes/rouge/rofi/theme.rasi
+
+    # Test Kanagawa theme
+    rofi -show drun -theme ~/.config/themes/kanagawa/rofi/theme.rasi
+
+    # Use active theme
+    rofi -show drun
+    #+END_SRC
+
+*** Rofi Modes
+    - =rofi -show drun= :: Application launcher
+    - =rofi -show run= :: Command runner
+    - =rofi -show window= :: Window switcher
+
+** Troubleshooting
+
+*** Theme Not Applying
+    - Verify =~/.config/rofi/theme.rasi= exists
+    - Check main config references theme correctly
+    - Test with explicit theme path
+
+*** Icons Missing
+    - Ensure =show-icons: true= in config
+    - Verify system icon theme is installed
+    - Check icon size settings
+
+*** Transparency Issues
+    - Ensure compositor (picom) is running
+    - Change =transparency: "real"= to ="none"= if needed
+
+** Color Palette Reference
+
+*** Rouge Theme Colors
+    | Color     | HEX      | Usage          |
+    |-----------+----------+-----------------|
+    | bg0       | #1f1f28  | Background      |
+    | bg1       | #363646  | Entry background|
+    | fg        | #dcd7ba  | Text            |
+    | red       | #8C3A3A  | Accent prompt   |
+    | orange    | #A67A5B  | Urgent items    |
+    | blue      | #2D4F67  | Selection       |
+
+*** Kanagawa Theme Colors
+    | Color     | HEX      | Usage          |
+    |-----------+----------+-----------------|
+    | bg0       | #1f1f28  | Background      |
+    | bg1       | #363646  | Entry background|
+    | fg        | #dcd7ba  | Text            |
+    | orange    | #C0A36E  | Accent prompt   |
+    | red       | #FF5D62  | Urgent items    |
+    | blue      | #2D4F67  | Selection       |
+
+This configuration provides beautiful, consistent Rofi themes that seamlessly integrate with your desktop theme system and provide an excellent user experience.
