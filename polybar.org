@@ -1,0 +1,488 @@
+#+TITLE: Complete Polybar Configuration with Theme Switching
+#+AUTHOR: Generated from Polybar Configuration
+#+DATE: {{{date(%Y-%m-%d)}}}
+
+* Complete Polybar Configuration with Theme Switching
+
+** Overview
+   This configuration provides a complete Polybar setup with support for theme switching between Rouge and Kanagawa themes. The configuration is modular and designed to work seamlessly with the theme switching system.
+
+** Directory Structure
+   #+BEGIN_SRC text
+   ~/.config/
+   ├── polybar/
+   │   ├── config.ini          # Main configuration file
+   │   └── colors              # Theme colors (auto-generated)
+   └── themes/
+       ├── rouge/
+       │   └── polybar/
+       │       └── colors      # Rouge theme colors
+       └── kanagawa/
+           └── polybar/
+               └── colors      # Kanagawa theme colors
+   #+END_SRC
+
+** Main Polybar Configuration File
+
+   Save this as =~/.config/polybar/config.ini=:
+
+   #+BEGIN_SRC ini
+   ;==========================================================
+   ;
+   ;
+   ;   ██████╗  ██████╗ ██╗  ██╗   ██╗██████╗  █████╗ ██████╗
+   ;   ██╔══██╗██╔═══██╗██║  ╚██╗ ██╔╝██╔══██╗██╔══██╗██╔══██╗
+   ;   ██████╔╝██║   ██║██║   ╚████╔╝ ██████╔╝███████║██████╔╝
+   ;   ██╔═══╝ ██║   ██║██║    ╚██╔╝  ██╔══██╗██╔══██║██╔══██╗
+   ;   ██║     ╚██████╔╝███████╗██║   ██████╔╝██║  ██║██║  ██║
+   ;   ╚═╝      ╚═════╝ ╚══════╝╚═╝   ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝
+   ;
+   ;
+   ;   To learn more about how to configure Polybar
+   ;   go to https://github.com/polybar/polybar
+   ;
+   ;   The README contains a lot of information
+   ;
+   ;==========================================================
+
+   ; Include theme colors - this file will be overwritten by theme switcher
+   include-file = ~/.config/polybar/colors
+
+   ; Fallback colors (used if theme file is missing)
+   [colors]
+   background = #1f1f28
+   foreground = #dcd7ba
+   primary    = #8C3A3A
+   secondary  = #A67A5B
+   alert      = #A64242
+   disabled   = #727169
+   background-alt = #363646
+
+   [bar/main]
+   ; Monitor settings (use xrandr to find your monitor name)
+   monitor = ${env:MONITOR:eDP-1}
+
+   ; Dimensions
+   width = 100%
+   height = 24pt
+   radius = 6.0
+   fixed-center = true
+
+   ; Colors
+   background = ${colors.background}
+   foreground = ${colors.foreground}
+
+   ; Borders
+   border-size = 0
+   border-color = #00000000
+
+   ; Padding and spacing
+   padding-left = 0
+   padding-right = 2
+   module-margin-left = 1
+   module-margin-right = 1
+
+   ; Separators
+   separator = |
+   separator-foreground = ${colors.disabled}
+
+   ; Fonts
+   font-0 = "JetBrains Mono:size=10;3"
+   font-1 = "Font Awesome 6 Free:style=Solid:size=10;3"
+   font-2 = "Font Awesome 6 Brands:size=10;3"
+
+   ; Modules
+   modules-left = i3 xwindow
+   modules-center = date
+   modules-right = filesystem pulseaudio memory cpu battery
+
+   ; Behavior
+   wm-restack = i3
+   cursor-click = pointer
+   cursor-scroll = ns-resize
+   enable-ipc = true
+
+   [module/i3]
+   type = internal/i3
+   format = <label-state> <label-mode>
+   index-sort = true
+   wrapping-scroll = false
+
+   ; Label settings
+   label-mode-padding = 2
+   label-mode-foreground = #000000
+   label-mode-background = ${colors.primary}
+
+   ; Workspace colors
+   label-focused = %index%
+   label-focused-background = ${colors.primary}
+   label-focused-foreground = ${colors.background}
+   label-focused-padding = 2
+
+   label-unfocused = %index%
+   label-unfocused-background = ${colors.background-alt}
+   label-unfocused-padding = 2
+
+   label-visible = %index%
+   label-visible-background = ${colors.secondary}
+   label-visible-foreground = ${colors.background}
+   label-visible-padding = 2
+
+   label-urgent = %index%
+   label-urgent-background = ${colors.alert}
+   label-urgent-foreground = ${colors.background}
+   label-urgent-padding = 2
+
+   [module/xwindow]
+   type = internal/xwindow
+   label = %title:0:60:...%
+   label-foreground = ${colors.foreground}
+
+   [module/filesystem]
+   type = internal/fs
+   interval = 30
+   mount-0 = /
+
+   format-mounted = <label-mounted>
+   format-mounted-prefix = " "
+   format-mounted-prefix-foreground = ${colors.primary}
+
+   label-mounted = %percentage_used%%
+
+   format-unmounted = <label-unmounted>
+   label-unmounted = %mountpoint% not mounted
+   label-unmounted-foreground = ${colors.disabled}
+
+   [module/pulseaudio]
+   type = internal/pulseaudio
+   format-volume = <label-volume> <bar-volume>
+   label-volume = %percentage%%
+   label-volume-foreground = ${colors.foreground}
+
+   format-volume-prefix = " "
+   format-volume-prefix-foreground = ${colors.primary}
+
+   format-muted = <label-muted>
+   format-muted-prefix = " "
+   format-muted-prefix-foreground = ${colors.disabled}
+   label-muted = muted
+   label-muted-foreground = ${colors.disabled}
+
+   bar-volume-width = 6
+   bar-volume-foreground-0 = #98C379
+   bar-volume-foreground-1 = #98C379
+   bar-volume-foreground-2 = #98C379
+   bar-volume-foreground-3 = #E5C07B
+   bar-volume-foreground-4 = #E5C07B
+   bar-volume-foreground-5 = #E06C75
+   bar-volume-gradient = false
+   bar-volume-indicator = |
+   bar-volume-fill = ─
+   bar-volume-empty = ─
+   bar-volume-empty-foreground = ${colors.disabled}
+
+   [module/memory]
+   type = internal/memory
+   interval = 2
+   format-prefix = " "
+   format-prefix-foreground = ${colors.primary}
+   label = %percentage_used:2%%
+
+   [module/cpu]
+   type = internal/cpu
+   interval = 2
+   format-prefix = " "
+   format-prefix-foreground = ${colors.primary}
+   label = %percentage:2%%
+
+   [module/battery]
+   type = internal/battery
+   battery = BAT0
+   adapter = AC
+   full-at = 98
+
+   format-charging = <animation-charging> <label-charging>
+   format-discharging = <ramp-capacity> <label-discharging>
+   format-full = <ramp-capacity> <label-full>
+
+   label-charging = %percentage%%
+   label-discharging = %percentage%%
+   label-full = %percentage%%
+
+   ramp-capacity-0 = 
+   ramp-capacity-0-foreground = ${colors.alert}
+   ramp-capacity-1 = 
+   ramp-capacity-1-foreground = ${colors.alert}
+   ramp-capacity-2 = 
+   ramp-capacity-2-foreground = #E5C07B
+   ramp-capacity-3 = 
+   ramp-capacity-3-foreground = #98C379
+   ramp-capacity-4 = 
+   ramp-capacity-4-foreground = #98C379
+
+   animation-charging-0 = 
+   animation-charging-1 = 
+   animation-charging-2 = 
+   animation-charging-3 = 
+   animation-charging-4 = 
+   animation-charging-framerate = 750
+
+   [module/date]
+   type = internal/date
+   interval = 1.0
+
+   date = %a %b %d %I:%M %p
+   date-alt = %Y-%m-%d %H:%M:%S
+
+   label = %date%
+   label-foreground = ${colors.primary}
+
+   [module/network]
+   type = internal/network
+   interface = wlan0
+   interval = 5.0
+
+   format-connected = <ramp-signal> <label-connected>
+   format-disconnected = <label-disconnected>
+   label-disconnected = 睊 disconnected
+   label-disconnected-foreground = ${colors.disabled}
+
+   format-connected-prefix = " "
+   format-connected-prefix-foreground = ${colors.primary}
+
+   label-connected = %essid% %local_ip%
+
+   ramp-signal-0 = 
+   ramp-signal-1 = 
+   ramp-signal-2 = 
+   ramp-signal-3 = 
+   ramp-signal-4 = 
+   ramp-signal-foreground = ${colors.secondary}
+
+   [module/backlight]
+   type = internal/backlight
+   card = intel_backlight
+
+   format = <label> <bar-brightness>
+   label = 
+
+   bar-brightness-width = 6
+   bar-brightness-foreground-0 = #E5C07B
+   bar-brightness-foreground-1 = #E5C07B
+   bar-brightness-foreground-2 = #E5C07B
+   bar-brightness-gradient = false
+   bar-brightness-indicator = |
+   bar-brightness-fill = ─
+   bar-brightness-empty = ─
+   bar-brightness-empty-foreground = ${colors.disabled}
+
+   [module/temperature]
+   type = internal/temperature
+   thermal-zone = 0
+   warn-temperature = 80
+
+   format = <label>
+   format-prefix = " "
+   format-prefix-foreground = ${colors.primary}
+   format-warn = <label-warn>
+   format-warn-prefix = " "
+   format-warn-prefix-foreground = ${colors.alert}
+
+   label = %temperature-c:2°C
+   label-warn = %temperature-c:2°C
+   label-warn-foreground = ${colors.alert}
+
+   [settings]
+   screenchange-reload = true
+   pseudo-transparency = false
+
+   ; vim:ft=dosini
+   #+END_SRC
+
+** Theme Color Files
+
+*** Rouge Theme Colors
+
+    Save as =~/.config/themes/rouge/polybar/colors=:
+
+    #+BEGIN_SRC ini
+    [colors]
+    background = #1f1f28
+    foreground = #dcd7ba
+    primary    = #8C3A3A
+    secondary  = #A67A5B
+    alert      = #A64242
+    disabled   = #727169
+    background-alt = #363646
+    #+END_SRC
+
+*** Kanagawa Theme Colors
+
+    Save as =~/.config/themes/kanagawa/polybar/colors=:
+
+    #+BEGIN_SRC ini
+    [colors]
+    background = #1f1f28
+    foreground = #dcd7ba
+    primary    = #2D4F67
+    secondary  = #C0A36E
+    alert      = #FF5D62
+    disabled   = #727169
+    background-alt = #363646
+    #+END_SRC
+
+** Theme Switcher Integration
+
+*** Update Theme Switcher Script
+
+    Add the following to your =~/.local/bin/theme-switcher= script:
+
+    #+BEGIN_SRC bash
+    # Apply polybar theme
+    if [ -f "$theme_dir/polybar/colors" ]; then
+        mkdir -p ~/.config/polybar
+        cp "$theme_dir/polybar/colors" ~/.config/polybar/colors
+        echo "  → polybar colors applied"
+    fi
+    #+END_SRC
+
+*** Update Reload Function
+
+    Add to the =reload_apps= function in your theme switcher:
+
+    #+BEGIN_SRC bash
+    # Reload polybar
+    if command -v polybar-msg >/dev/null; then
+        pkill polybar || true
+        sleep 0.5
+        # Start polybar (adjust for your setup)
+        polybar main &
+        echo "  → polybar reloaded"
+    fi
+    #+END_SRC
+
+** Installation Steps
+
+*** 1. Create Directory Structure
+    #+BEGIN_SRC bash
+    mkdir -p ~/.config/polybar
+    mkdir -p ~/.config/themes/{rouge,kanagawa}/polybar
+    #+END_SRC
+
+*** 2. Create Configuration Files
+    - Copy the main configuration to =~/.config/polybar/config.ini=
+    - Copy the theme color files to their respective directories
+
+*** 3. Set Initial Theme
+    #+BEGIN_SRC bash
+    theme-switcher rouge
+    #+END_SRC
+
+*** 4. Test Polybar
+    #+BEGIN_SRC bash
+    # Kill any existing polybar instances
+    pkill polybar
+    
+    # Start polybar
+    polybar main &
+    #+END_SRC
+
+** Module Descriptions
+
+*** Modules Left
+    - =i3= :: i3 workspace switcher with theme-colored workspaces
+    - =xwindow= :: Current window title
+
+*** Modules Center  
+    - =date= :: Date and time with theme-colored highlight
+
+*** Modules Right
+    - =filesystem= :: Disk usage with theme-colored icon
+    - =pulseaudio= :: Volume control with visual bar
+    - =memory= :: RAM usage with theme-colored icon
+    - =cpu= :: CPU usage with theme-colored icon
+    - =battery= :: Battery status with color-coded levels
+
+*** Optional Modules
+    - =network= :: WiFi status and connection info
+    - =backlight= :: Screen brightness control
+    - =temperature= :: CPU temperature monitoring
+
+** Theme Visual Differences
+
+*** Rouge Theme
+    - *Primary*: Warm burgundy (#8C3A3A)
+    - *Secondary*: Earthy brown (#A67A5B)
+    - *Alert*: Deep red (#A64242)
+    - *Feel*: Rich, warm, elegant
+
+*** Kanagawa Theme
+    - *Primary*: Wave blue (#2D4F67)
+    - *Secondary*: Autumn gold (#C0A36E)
+    - *Alert*: Sunrise red (#FF5D62)
+    - *Feel*: Serene, Japanese-inspired
+
+** Usage Commands
+
+*** Theme Switching
+    #+BEGIN_SRC bash
+    theme-switcher rouge      # Switch to Rouge theme
+    theme-switcher kanagawa   # Switch to Kanagawa theme
+    theme-switcher next       # Cycle to next theme
+    theme-switcher reload     # Reload current theme
+    #+END_SRC
+
+*** Polybar Management
+    #+BEGIN_SRC bash
+    polybar main &           # Start polybar
+    pkill polybar            # Stop polybar
+    polybar-msg cmd restart  # Restart polybar (if running)
+    #+END_SRC
+
+** Customization Tips
+
+*** Changing Monitor
+    Edit the =monitor= line in =[bar/main]= section:
+    #+BEGIN_SRC ini
+    monitor = ${env:MONITOR:HDMI-1}  # Change to your monitor
+    #+END_SRC
+
+*** Adding New Modules
+    Create new module sections following the same pattern:
+    #+BEGIN_SRC ini
+    [module/custom]
+    type = internal/...
+    format-prefix-foreground = ${colors.primary}
+    label-foreground = ${colors.foreground}
+    #+END_SRC
+
+*** Font Installation
+    Install required fonts:
+    #+BEGIN_SRC bash
+    # JetBrains Mono
+    sudo pacman -S ttf-jetbrains-mono  # Arch
+    sudo apt install fonts-jetbrains   # Debian/Ubuntu
+    
+    # Font Awesome
+    sudo pacman -S ttf-font-awesome    # Arch
+    sudo apt install fonts-font-awesome # Debian/Ubuntu
+    #+END_SRC
+
+** Troubleshooting
+
+*** Colors Not Changing
+    - Check if =~/.config/polybar/colors= file exists
+    - Verify theme switcher copied the correct file
+    - Restart polybar after theme change
+
+*** Modules Not Appearing
+    - Check if required system utilities are installed
+    - Verify module configurations match your system
+    - Check polybar logs: =polybar main -l info=
+
+*** Font Icons Missing
+    - Install required font packages
+    - Verify font names in configuration
+    - Restart polybar after font installation
+
+This configuration provides a complete, theme-ready Polybar setup that integrates seamlessly with your theme switching system!
