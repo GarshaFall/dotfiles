@@ -1,0 +1,661 @@
+#+TITLE: Complete Theme Switcher Script
+#+AUTHOR: GarshaFall
+#+DATE: {{{date(%Y-%m-%d)}}}
+
+* Complete Theme Switcher Script
+
+  A comprehensive theme switching script that handles i3, polybar, rofi, XTerm, and other applications with seamless theme transitions.
+
+** Installation
+
+   Save as =~/.local/bin/theme-switcher=:
+
+   #+BEGIN_SRC bash
+   #!/bin/bash
+
+   # Theme Switcher Script
+   # Supports Rouge and Kanagawa themes across i3, polybar, rofi, XTerm, and more
+
+   THEMES_DIR="$HOME/.config/themes"
+   CURRENT_THEME_LINK="$THEMES_DIR/current"
+   CONFIG_DIR="$HOME/.config"
+
+   # Available themes
+   THEMES=("rouge" "kanagawa")
+
+   # Function to show usage
+   show_usage() {
+       echo "🎨 Theme Switcher"
+       echo "Usage: theme-switcher [OPTION]"
+       echo ""
+       echo "Options:"
+       echo "  rouge          Switch to Rouge theme (warm burgundy)"
+       echo "  kanagawa       Switch to Kanagawa theme (Japanese-inspired)" 
+       echo "  next           Switch to next theme"
+       echo "  current        Show current theme"
+       echo "  list           List available themes"
+       echo "  reload         Reload current theme"
+       echo "  help           Show this help message"
+       echo ""
+       echo "Keybindings in i3:"
+       echo "  Ctrl+x t r     Switch to Rouge theme"
+       echo "  Ctrl+x t k     Switch to Kanagawa theme"
+       echo "  Ctrl+x t n     Switch to next theme"
+   }
+
+   # Function to get current theme
+   get_current_theme() {
+       if [ -L "$CURRENT_THEME_LINK" ]; then
+           basename $(readlink "$CURRENT_THEME_LINK")
+       else
+           echo "none"
+       fi
+   }
+
+   # Function to get next theme
+   get_next_theme() {
+       local current=$(get_current_theme)
+       case "$current" in
+           "rouge") echo "kanagawa" ;;
+           "kanagawa") echo "rouge" ;;
+           *) echo "rouge" ;;
+       esac
+   }
+
+   # Function to load theme configuration
+   load_theme_config() {
+       local theme="$1"
+       local config_file="$THEMES_DIR/$theme/theme.conf"
+       
+       if [ -f "$config_file" ]; then
+           source "$config_file"
+       else
+           # Default theme configurations
+           case "$theme" in
+               "rouge")
+                   PRIMARY_COLOR="#8C3A3A"
+                   SECONDARY_COLOR="#A67A5B"
+                   BACKGROUND_COLOR="#1f1f28"
+                   FOREGROUND_COLOR="#dcd7ba"
+                   ACCENT_COLOR="#B8A26D"
+                   ALERT_COLOR="#A64242"
+                   ;;
+               "kanagawa")
+                   PRIMARY_COLOR="#2D4F67"
+                   SECONDARY_COLOR="#C0A36E"
+                   BACKGROUND_COLOR="#1f1f28"
+                   FOREGROUND_COLOR="#dcd7ba"
+                   ACCENT_COLOR="#6A9589"
+                   ALERT_COLOR="#FF5D62"
+                   ;;
+           esac
+       fi
+   }
+
+   # Function to apply i3 theme
+   apply_i3_theme() {
+       local theme="$1"
+       local theme_dir="$THEMES_DIR/$theme"
+       
+       if [ -f "$theme_dir/i3/colors" ]; then
+           mkdir -p ~/.config/i3
+           cp "$theme_dir/i3/colors" ~/.config/i3/colors
+           echo "  ✅ i3 colors applied"
+       else
+           echo "  ❌ i3 theme file not found for $theme"
+       fi
+   }
+
+   # Function to apply polybar theme
+   apply_polybar_theme() {
+       local theme="$1"
+       local theme_dir="$THEMES_DIR/$theme"
+       
+       if [ -f "$theme_dir/polybar/colors" ]; then
+           mkdir -p ~/.config/polybar
+           cp "$theme_dir/polybar/colors" ~/.config/polybar/colors
+           echo "  ✅ polybar colors applied"
+       else
+           echo "  ❌ polybar theme file not found for $theme"
+       fi
+   }
+
+   # Function to apply rofi theme
+   apply_rofi_theme() {
+       local theme="$1"
+       local theme_dir="$THEMES_DIR/$theme"
+       
+       if [ -f "$theme_dir/rofi/theme.rasi" ]; then
+           mkdir -p ~/.config/rofi
+           cp "$theme_dir/rofi/theme.rasi" ~/.config/rofi/theme.rasi
+           echo "  ✅ rofi theme applied"
+       else
+           echo "  ❌ rofi theme file not found for $theme"
+       fi
+   }
+
+   # Function to apply XTerm theme
+   apply_xterm_theme() {
+       local theme="$1"
+       local theme_dir="$THEMES_DIR/$theme"
+       
+       if [ -f "$theme_dir/Xresources" ]; then
+           mkdir -p ~/.config
+           cp "$theme_dir/Xresources" ~/.config/Xresources
+           
+           # Reload Xresources if X is running
+           if command -v xrdb >/dev/null && [ -n "$DISPLAY" ]; then
+               xrdb -merge ~/.Xresources
+               echo "  ✅ XTerm colors applied and reloaded"
+           else
+               echo "  ✅ XTerm colors applied (run 'xrdb -merge ~/.Xresources' to reload)"
+           fi
+       else
+           echo "  ❌ XTerm theme file not found for $theme"
+       fi
+   }
+
+   # Function to apply GTK theme (optional)
+   apply_gtk_theme() {
+       local theme="$1"
+       
+       # Set GTK theme to match (you can create matching GTK themes)
+       case "$theme" in
+           "rouge")
+               gsettings set org.gnome.desktop.interface gtk-theme "Adwaita-dark"
+               ;;
+           "kanagawa")
+               gsettings set org.gnome.desktop.interface gtk-theme "Adwaita-dark"
+               ;;
+       esac
+       echo "  ✅ GTK theme adjusted"
+   }
+
+   # Function to reload applications
+   reload_apps() {
+       echo ""
+       echo "🔄 Reloading applications..."
+       
+       # Reload i3
+       if command -v i3-msg >/dev/null; then
+           i3-msg restart >/dev/null 2>&1
+           echo "  ✅ i3 reloaded"
+       else
+           echo "  ❌ i3 not found"
+       fi
+       
+       # Reload polybar
+       if command -v polybar-msg >/dev/null; then
+           # Kill existing polybar processes
+           pkill polybar 2>/dev/null
+           sleep 1
+           # Start polybar
+           polybar main >/dev/null 2>&1 &
+           echo "  ✅ polybar reloaded"
+       else
+           echo "  ⚠️  polybar not running or not found"
+       fi
+       
+       # Reload dunst (notifications)
+       if command -v dunstctl >/dev/null; then
+           dunstctl reload
+           echo "  ✅ dunst reloaded"
+       fi
+       
+       # Note for user about terminals
+       echo ""
+       echo "💡 Note: Open terminals will need to be restarted to see theme changes"
+       echo "   Run 'xrdb -merge ~/.Xresources' in existing terminals if needed"
+   }
+
+   # Function to create initial theme files
+   create_initial_themes() {
+       echo "🏗️  Creating initial theme files..."
+       
+       # Create themes directory
+       mkdir -p "$THEMES_DIR"
+       
+       # Create Rouge theme files
+       mkdir -p "$THEMES_DIR/rouge"/{i3,polybar,rofi}
+       
+       # Rouge i3 colors
+       cat > "$THEMES_DIR/rouge/i3/colors" << 'EOF'
+   # Rouge Theme Colors for i3
+   # class                 border  background text    indicator
+   client.focused          #8C3A3A #8C3A3A #dcd7ba #8C3A3A
+   client.focused_inactive #A67A5B #A67A5B #dcd7ba #A67A5B
+   client.unfocused        #363646 #363646 #727169 #292d2e
+   client.urgent           #A64242 #A64242 #dcd7ba #A64242
+   client.placeholder      #1f1f28 #1f1f28 #727169 #1f1f28
+
+   client.background       #1f1f28
+   EOF
+
+       # Rouge polybar colors
+       cat > "$THEMES_DIR/rouge/polybar/colors" << 'EOF'
+   [colors]
+   background = #1f1f28
+   foreground = #dcd7ba
+   primary    = #8C3A3A
+   secondary  = #A67A5B
+   alert      = #A64242
+   disabled   = #727169
+   background-alt = #363646
+   EOF
+
+       # Rouge rofi theme
+       cat > "$THEMES_DIR/rouge/rofi/theme.rasi" << 'EOF'
+   * {
+       bg0:  #1f1f28;
+       bg1:  #363646;
+       fg:   #dcd7ba;
+       red:    #8C3A3A;
+       orange: #A67A5B;
+       blue:   #2D4F67;
+       
+       bg-col: @bg0;
+       border-col: @blue;
+       accent: @red;
+   }
+
+   window {
+       background-color: @bg-col;
+       border: 2px;
+       border-color: @border-col;
+       border-radius: 8px;
+   }
+
+   prompt {
+       background-color: @accent;
+       text-color: @bg-col;
+   }
+   EOF
+
+       # Rouge Xresources
+       cat > "$THEMES_DIR/rouge/Xresources" << 'EOF'
+   ! Rouge Theme Colors for XTerm
+   XTerm*foreground: #E5C07B
+   XTerm*background: #1f1f28
+   XTerm*cursorColor: #D19A66
+   XTerm*color0: #1f1f28
+   XTerm*color1: #8C3A3A
+   XTerm*color2: #5A8E7F
+   XTerm*color3: #B8A26D
+   XTerm*color4: #2D4F67
+   XTerm*color5: #957FB8
+   XTerm*color6: #7FB4CA
+   XTerm*color7: #dcd7ba
+   XTerm*color8: #363646
+   XTerm*color9: #A64242
+   XTerm*color10: #6A9589
+   XTerm*color11: #D4B483
+   XTerm*color12: #7FB4CA
+   XTerm*color13: #B8A26D
+   XTerm*color14: #56B6C2
+   XTerm*color15: #FFFFFF
+   EOF
+
+       # Create Kanagawa theme files
+       mkdir -p "$THEMES_DIR/kanagawa"/{i3,polybar,rofi}
+       
+       # Kanagawa i3 colors
+       cat > "$THEMES_DIR/kanagawa/i3/colors" << 'EOF'
+   # Kanagawa Theme Colors for i3
+   # class                 border  background text    indicator
+   client.focused          #2D4F67 #2D4F67 #dcd7ba #2D4F67
+   client.focused_inactive #C0A36E #C0A36E #dcd7ba #C0A36E
+   client.unfocused        #363646 #363646 #727169 #292d2e
+   client.urgent           #FF5D62 #FF5D62 #dcd7ba #FF5D62
+   client.placeholder      #1f1f28 #1f1f28 #727169 #1f1f28
+
+   client.background       #1f1f28
+   EOF
+
+       # Kanagawa polybar colors
+       cat > "$THEMES_DIR/kanagawa/polybar/colors" << 'EOF'
+   [colors]
+   background = #1f1f28
+   foreground = #dcd7ba
+   primary    = #2D4F67
+   secondary  = #C0A36E
+   alert      = #FF5D62
+   disabled   = #727169
+   background-alt = #363646
+   EOF
+
+       # Kanagawa rofi theme
+       cat > "$THEMES_DIR/kanagawa/rofi/theme.rasi" << 'EOF'
+   * {
+       bg0:  #1f1f28;
+       bg1:  #363646;
+       fg:   #dcd7ba;
+       red:    #FF5D62;
+       orange: #C0A36E;
+       blue:   #2D4F67;
+       
+       bg-col: @bg0;
+       border-col: @blue;
+       accent: @orange;
+   }
+
+   window {
+       background-color: @bg-col;
+       border: 2px;
+       border-color: @border-col;
+       border-radius: 8px;
+   }
+
+   prompt {
+       background-color: @accent;
+       text-color: @bg-col;
+   }
+   EOF
+
+       # Kanagawa Xresources
+       cat > "$THEMES_DIR/kanagawa/Xresources" << 'EOF'
+   ! Kanagawa Theme Colors for XTerm
+   XTerm*foreground: #dcd7ba
+   XTerm*background: #1f1f28
+   XTerm*cursorColor: #C0A36E
+   XTerm*color0: #1f1f28
+   XTerm*color1: #FF5D62
+   XTerm*color2: #98C379
+   XTerm*color3: #E6C384
+   XTerm*color4: #7FB4CA
+   XTerm*color5: #957FB8
+   XTerm*color6: #6A9589
+   XTerm*color7: #C8C093
+   XTerm*color8: #363646
+   XTerm*color9: #E46876
+   XTerm*color10: #98BB6C
+   XTerm*color11: #E6C384
+   XTerm*color12: #7FB4CA
+   XTerm*color13: #957FB8
+   XTerm*color14: #6A9589
+   XTerm*color15: #DCD7BA
+   EOF
+
+       echo "✅ Initial theme files created in $THEMES_DIR/"
+   }
+
+   # Function to apply theme
+   apply_theme() {
+       local theme="$1"
+       local theme_dir="$THEMES_DIR/$theme"
+       
+       # Check if theme exists
+       if [ ! -d "$theme_dir" ]; then
+           echo "❌ Theme '$theme' not found in $THEMES_DIR/"
+           echo "   Available themes: ${THEMES[*]}"
+           return 1
+       fi
+       
+       echo "🎨 Switching to $theme theme..."
+       echo ""
+       
+       # Load theme configuration
+       load_theme_config "$theme"
+       
+       # Update symlink to current theme
+       ln -sfn "$theme_dir" "$CURRENT_THEME_LINK"
+       
+       # Apply themes to all components
+       apply_i3_theme "$theme"
+       apply_polybar_theme "$theme"
+       apply_rofi_theme "$theme"
+       apply_xterm_theme "$theme"
+       apply_gtk_theme "$theme"
+       
+       # Update bash theme variable
+       export THEME=$(echo "$theme" | tr '[:lower:]' '[:upper:]')
+       if [ -f ~/.bashrc ]; then
+           sed -i.bak "s/^THEME=.*/THEME=\"$THEME\"/" ~/.bashrc
+       fi
+       
+       echo ""
+       echo "✅ $theme theme applied successfully!"
+       
+       # Show theme colors
+       echo ""
+       echo "🎨 Current Colors:"
+       echo "   Primary:   $PRIMARY_COLOR"
+       echo "   Secondary: $SECONDARY_COLOR"
+       echo "   Background: $BACKGROUND_COLOR"
+       echo "   Foreground: $FOREGROUND_COLOR"
+   }
+
+   # Function to show current theme info
+   show_current_theme() {
+       local current=$(get_current_theme)
+       if [ "$current" != "none" ]; then
+           echo "🎨 Current theme: $current"
+           
+           # Load and show theme colors
+           load_theme_config "$current"
+           echo "   Colors:"
+           echo "     Primary:   $PRIMARY_COLOR"
+           echo "     Secondary: $SECONDARY_COLOR"
+           echo "     Background: $BACKGROUND_COLOR"
+           echo "     Text:      $FOREGROUND_COLOR"
+           
+           # Show available themes
+           echo ""
+           echo "📚 Available themes: ${THEMES[*]}"
+       else
+           echo "❌ No theme currently set"
+           echo "   Use: theme-switcher rouge  (to set initial theme)"
+       fi
+   }
+
+   # Main script logic
+   main() {
+       # Create themes directory if it doesn't exist
+       mkdir -p "$THEMES_DIR"
+       
+       # Initialize themes if they don't exist
+       if [ ! -d "$THEMES_DIR/rouge" ] || [ ! -d "$THEMES_DIR/kanagawa" ]; then
+           create_initial_themes
+       fi
+       
+       case "$1" in
+           "rouge"|"kanagawa")
+               apply_theme "$1"
+               reload_apps
+               ;;
+           "next")
+               next_theme=$(get_next_theme)
+               apply_theme "$next_theme"
+               reload_apps
+               ;;
+           "current")
+               show_current_theme
+               ;;
+           "list")
+               echo "📚 Available themes: ${THEMES[*]}"
+               ;;
+           "reload")
+               current_theme=$(get_current_theme)
+               if [ "$current_theme" != "none" ]; then
+                   apply_theme "$current_theme"
+                   reload_apps
+               else
+                   echo "❌ No theme currently set"
+                   echo "   Use: theme-switcher rouge  (to set initial theme)"
+               fi
+               ;;
+           "init"|"create")
+               create_initial_themes
+               ;;
+           "help"|"-h"|"--help")
+               show_usage
+               ;;
+           *)
+               echo "❌ Unknown option: $1"
+               echo ""
+               show_usage
+               exit 1
+               ;;
+       esac
+   }
+
+   # Run main function with all arguments
+   main "$@"
+   #+END_SRC
+
+** Make Executable
+
+   #+BEGIN_SRC bash
+   chmod +x ~/.local/bin/theme-switcher
+   #+END_SRC
+
+** Directory Structure Created
+
+   #+BEGIN_SRC text
+   ~/.config/themes/
+   ├── current -> rouge/ (symlink)
+   ├── rouge/
+   │   ├── i3/colors
+   │   ├── polybar/colors
+   │   ├── rofi/theme.rasi
+   │   └── Xresources
+   └── kanagawa/
+       ├── i3/colors
+       ├── polybar/colors
+       ├── rofi/theme.rasi
+       └── Xresources
+   #+END_SRC
+
+* Usage Examples
+
+** Basic Commands
+
+   #+BEGIN_SRC bash
+   # Switch to Rouge theme
+   theme-switcher rouge
+
+   # Switch to Kanagawa theme  
+   theme-switcher kanagawa
+
+   # Cycle to next theme
+   theme-switcher next
+
+   # Show current theme
+   theme-switcher current
+
+   # Reload current theme
+   theme-switcher reload
+
+   # List available themes
+   theme-switcher list
+
+   # Create initial theme files
+   theme-switcher init
+
+   # Show help
+   theme-switcher help
+   #+END_SRC
+
+** i3 Keybindings Integration
+
+   Add to =~/.config/i3/config=:
+
+   #+BEGIN_SRC ini
+   # Theme switching with Emacs bindings
+   bindsym Control+x t r exec --no-startup-id theme-switcher rouge
+   bindsym Control+x t k exec --no-startup-id theme-switcher kanagawa
+   bindsym Control+x t n exec --no-startup-id theme-switcher next
+   bindsym Control+x t r exec --no-startup-id theme-switcher reload
+   #+END_SRC
+
+* Features
+
+** Supported Applications
+   - ✅ i3 window manager
+   - ✅ Polybar status bar
+   - ✅ Rofi application launcher
+   - ✅ XTerm terminal
+   - ✅ GTK applications (basic)
+
+** Automatic Reloading
+   - i3 restart
+   - Polybar restart
+   - Dunst notifications reload
+   - Xresources merge
+
+** Theme Management
+   - Symlink-based current theme tracking
+   - Color configuration loading
+   - Bash environment variable updates
+   - Comprehensive error handling
+
+* Color Palettes
+
+** Rouge Theme Colors
+   | Component | Color     | Usage                  |
+   |-----------+-----------+------------------------|
+   | Primary   | #8C3A3A   | Focused windows, accents |
+   | Secondary | #A67A5B   | Inactive elements      |
+   | Background| #1f1f28   | Main background        |
+   | Text      | #dcd7ba   | Primary text           |
+   | Alert     | #A64242   | Warnings, errors       |
+
+** Kanagawa Theme Colors
+   | Component | Color     | Usage                  |
+   |-----------+-----------+------------------------|
+   | Primary   | #2D4F67   | Focused windows, accents |
+   | Secondary | #C0A36E   | Inactive elements      |
+   | Background| #1f1f28   | Main background        |
+   | Text      | #dcd7ba   | Primary text           |
+   | Alert     | #FF5D62   | Warnings, errors       |
+
+* Troubleshooting
+
+** Common Issues
+
+   #+BEGIN_SRC bash
+   # If themes don't exist:
+   theme-switcher init
+
+   # If script is not executable:
+   chmod +x ~/.local/bin/theme-switcher
+
+   # If PATH doesn't include ~/.local/bin:
+   export PATH="$HOME/.local/bin:$PATH"
+
+   # Manual Xresources reload:
+   xrdb -merge ~/.Xresources
+
+   # Check current theme:
+   theme-switcher current
+   #+END_SRC
+
+** Application-Specific Issues
+
+   - *i3*: Run =i3-msg restart= if changes don't apply
+   - *Polybar*: Run =pkill polybar && polybar main &=
+   - *Rofi*: Test with =rofi -show drun -theme ~/.config/rofi/theme.rasi=
+   - *XTerm*: Run =xrdb -merge ~/.Xresources= in existing terminals
+
+* Customization
+
+** Adding New Applications
+
+   1. Create theme files in each theme directory
+   2. Add new apply function to the script
+   3. Call the function in =apply_theme()=
+
+** Creating New Themes
+
+   1. Copy an existing theme directory
+   2. Modify color values in all config files
+   3. Update =load_theme_config()= function
+   4. Add to =THEMES= array
+
+** Extending Functionality
+
+   - Add support for more applications (Alacritty, Kitty, etc.)
+   - Implement theme preview functionality
+   - Add theme randomization
+   - Create time-based auto-switching
+
+This comprehensive theme switcher provides seamless theme transitions across your entire desktop environment with robust error handling and easy extensibility.
