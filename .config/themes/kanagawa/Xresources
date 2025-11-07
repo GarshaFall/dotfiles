@@ -1,0 +1,20 @@
+! Kanagawa Theme Color Palette for XTerm
+XTerm*foreground: #dcd7ba  ! Parchment (for text)
+XTerm*background: #1f1f28  ! Dark background
+XTerm*cursorColor: #C0A36E  ! Autumn Gold (for cursor)
+XTerm*color0: #1f1f28  ! Dark background
+XTerm*color1: #FF5D62  ! Sunrise Red
+XTerm*color2: #98C379  ! Green
+XTerm*color3: #E6C384  ! Warm Beige
+XTerm*color4: #7FB4CA  ! Sky Blue
+XTerm*color5: #957FB8  ! Lavender
+XTerm*color6: #6A9589  ! Sage Green
+XTerm*color7: #C8C093  ! Light Parchment
+XTerm*color8: #363646  ! Dark gray
+XTerm*color9: #E46876  ! Coral Pink
+XTerm*color10: #98BB6C ! Bright Green
+XTerm*color11: #E6C384 ! Warm Beige
+XTerm*color12: #7FB4CA ! Sky Blue
+XTerm*color13: #957FB8 ! Lavender
+XTerm*color14: #6A9589 ! Sage Green
+XTerm*color15: #DCD7BA ! Parchment
