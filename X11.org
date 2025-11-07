@@ -1,0 +1,219 @@
+#+TITLE: X11 Configuration Files
+#+AUTHOR: GarshaFall
+#+DATE: {{{date(%Y-%m-%d)}}}
+
+* X11 Configuration Files
+
+  Complete overview of all X11 configuration files for the Fedora i3 desktop.
+
+** Essential X11 Configuration Files
+
+*** ~/.Xresources
+    - *Purpose*: Terminal colors, fonts, and X application settings
+    - *Contents*: XTerm configuration, font rendering, color schemes
+    - *Load Command*: =xrdb -merge ~/.Xresources=
+
+*** ~/.xinitrc
+    - *Purpose*: Startup script when using =startx=
+    - *Contents*: Display setup, application startup, environment
+    - *Usage*: =startx= (instead of display manager)
+
+*** ~/.Xauthority
+    - *Purpose*: X authentication file (auto-generated)
+    - *Contents*: Security tokens for X server access
+    - *Note*: Don't edit manually
+
+*** ~/.Xmodmap
+    - *Purpose*: Keyboard remapping
+    - *Contents*: Key symbol remapping (Caps Lock to Escape, etc.)
+    - *Load Command*: =xmodmap ~/.Xmodmap=
+
+*** ~/.xsession
+    - *Purpose*: Session startup (when using display manager)
+    - *Contents*: Environment variables, startup applications
+    - *Usage*: Auto-loaded by display managers
+
+** Complete X11 Setup
+
+*** Installation Commands
+    #+BEGIN_SRC bash
+    # Install all X11 utilities
+    sudo dnf install \
+        xorg-x11-utils \
+        xorg-x11-server-utils \
+        xsel xclip \
+        arandr \
+        xdotool \
+        scrot \
+        xkill \
+        xauth \
+        xdpyinfo \
+        xprop \
+        xwininfo \
+        xrandr
+
+    # Install fonts
+    sudo dnf install \
+        fira-code-fonts \
+        fontawesome-fonts \
+        google-roboto-fonts
+
+    # Install additional tools
+    sudo dnf install \
+        flameshot \
+        lxappearance \
+        qt5-qtconfig
+    #+END_SRC
+
+*** File Creation and Setup
+    #+BEGIN_SRC bash
+    # Create Xresources
+    cp xresources-config.txt ~/.Xresources
+
+    # Create xinitrc (optional)
+    cat > ~/.xinitrc << 'EOF'
+    #!/bin/bash
+
+    # Merge X resources
+    xrdb -merge ~/.Xresources
+
+    # Set DPI
+    xrandr --dpi 96
+
+    # Start compositor
+    picom &
+
+    # Set wallpaper
+    feh --bg-fill ~/Pictures/City1.jpg
+
+    # Start i3
+    exec i3
+    EOF
+
+    chmod +x ~/.xinitrc
+
+    # Create Xmodmap (optional - Caps Lock to Escape)
+    cat > ~/.Xmodmap << 'EOF'
+    ! Swap Caps Lock and Escape
+    remove Lock = Caps_Lock
+    keysym Caps_Lock = Escape
+    keysym Escape = Caps_Lock
+    add Lock = Caps_Lock
+    EOF
+    #+END_SRC
+
+*** Loading Configuration
+    #+BEGIN_SRC bash
+    # Load Xresources
+    xrdb -merge ~/.Xresources
+
+    # Load Xmodmap (if created)
+    xmodmap ~/.Xmodmap
+
+    # Verify settings
+    xrdb -query
+    xmodmap -pke | grep -E "(Caps_Lock|Escape)"
+    #+END_SRC
+
+** X11 Utility Reference
+
+*** Display Management
+    | Command | Purpose |
+    |---------|---------|
+    | =xrandr= | Display configuration |
+    | =arandr= | GUI display configuration |
+    | =xdpyinfo= | Display information |
+    | =xrandr --dpi 96= | Set DPI |
+
+*** Window Management
+    | Command | Purpose |
+    |---------|---------|
+    | =xwininfo= | Window information |
+    | =xprop= | Window properties |
+    | =xdotool= | Window automation |
+    | =xkill= | Force quit window |
+
+*** Input Management
+    | Command | Purpose |
+    |---------|---------|
+    | =xev= | Input event viewer |
+    | =xmodmap= | Keyboard remapping |
+    | =xinput= | Input device configuration |
+    | =setxkbmap= | Keyboard layout |
+
+*** Utilities
+    | Command | Purpose |
+    |---------|---------|
+    | =xsel= / =xclip= | Clipboard |
+    | =scrot= / =flameshot= | Screenshots |
+    | =xauth= | X authentication |
+
+** Troubleshooting Guide
+
+*** Common Issues and Solutions
+    #+BEGIN_SRC bash
+    # X resources not loading
+    xrdb -load ~/.Xresources
+
+    # Fonts not appearing
+    fc-cache -fv
+
+    # Display issues
+    xrandr --auto
+
+    # Keyboard not working
+    setxkbmap us
+
+    # Clipboard issues
+    echo "test" | xclip -selection clipboard
+    xclip -selection clipboard -o
+
+    # Check X extensions
+    xdpyinfo | grep "number of extensions"
+    #+END_SRC
+
+*** Diagnostic Commands
+    #+BEGIN_SRC bash
+    # Check X server version
+    X -version
+
+    # List connected displays
+    xrandr --listmonitors
+
+    # Check input devices
+    xinput list
+
+    # Test font rendering
+    xterm -e "echo 'Font test'"
+
+    # Check color depth
+    xdpyinfo | grep "depth of root window"
+    #+END_SRC
+
+** Best Practices
+
+*** Performance
+    - Use =picom= with minimal effects for better performance
+    - Limit background applications in =~/.xinitrc=
+    - Use lightweight alternatives (feh instead of nitrogen, etc.)
+
+*** Compatibility
+    - Test X resources in new terminal instances
+    - Verify font availability with =fc-list=
+    - Check DPI settings on high-resolution displays
+
+*** Security
+    - Use =xauth= for remote X connections
+    - Avoid running X applications as root
+    - Keep =~/.Xauthority= permissions secure (600)
+
+** File Locations Summary
+    - =~/.Xresources= : Application settings and colors
+    - =~/.xinitrc= : Startup script (startx)
+    - =~/.Xmodmap= : Keyboard remapping
+    - =~/.xsession= : Session script (display manager)
+    - =~/.Xauthority= : Authentication (auto-generated)
+    - =~/.config/i3/config= : Window manager
+    - =~/.config/polybar/config.ini= : Status bar
+
+This completes your comprehensive X11 configuration setup!
