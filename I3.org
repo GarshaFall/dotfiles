@@ -1,0 +1,401 @@
+```org
+#+TITLE: i3 Window Manager Configuration with Theme Switching
+#+AUTHOR: Generated from i3 Configuration
+#+DATE: {{{date(%Y-%m-%d)}}}
+
+* i3 Window Manager Configuration with Theme Switching
+
+** Overview
+   This configuration provides a complete i3 setup with support for theme switching between Rouge and Kanagawa themes. The configuration is modular and designed to work seamlessly with the theme switching system.
+
+** Directory Structure
+   #+BEGIN_SRC text
+   ~/.config/
+   ├── i3/
+   │   ├── config              # Main configuration file
+   │   └── colors              # Theme colors (auto-generated)
+   └── themes/
+       ├── rouge/
+       │   └── i3/
+       │       └── colors      # Rouge theme colors
+       └── kanagawa/
+           └── i3/
+               └── colors      # Kanagawa theme colors
+   #+END_SRC
+
+** Main i3 Configuration File
+
+   Save this as =~/.config/i3/config=:
+
+   #+BEGIN_SRC conf
+   # i3 configuration file
+   # Main configuration with theme support
+
+   #==========================================
+   # General Settings
+   #==========================================
+   set $mod Mod4
+   font pango:Fira Mono Nerd Font 10
+
+   #==========================================
+   # Startup Applications
+   #==========================================
+   exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
+   exec --no-startup-id xrandr -s 1920x1080
+   exec --no-startup-id feh --bg-fill ~/Pictures/City1.jpg
+   exec --no-startup-id picom
+   exec_always --no-startup-id pkill -x polybar; polybar main
+
+   #==========================================
+   # Theme Switching Keybindings
+   #==========================================
+   bindsym $mod+Shift+t exec theme-switcher next
+   bindsym $mod+Ctrl+t exec theme-switcher reload
+   bindsym $mod+Alt+t exec --no-startup-id theme-switcher rouge
+   bindsym $mod+Shift+Alt+t exec --no-startup-id theme-switcher kanagawa
+
+   #==========================================
+   # Application Launchers
+   #==========================================
+   bindsym $mod+Return exec alacritty
+   bindsym $mod+Alt+q exec "systemctl poweroff"
+   bindsym $mod+d exec rofi -show drun
+   bindsym $mod+Ctrl+d exec firefox
+
+   #==========================================
+   # Window Management
+   #==========================================
+   bindsym $mod+Shift+q kill
+
+   # Change focus
+   bindsym $mod+b focus left
+   bindsym $mod+n focus down
+   bindsym $mod+p focus up
+   bindsym $mod+f focus right
+
+   bindsym $mod+Left focus left
+   bindsym $mod+Down focus down
+   bindsym $mod+Up focus up
+   bindsym $mod+Right focus right
+
+   # Move focused window
+   bindsym $mod+Shift+b move left
+   bindsym $mod+Shift+n move down
+   bindsym $mod+Shift+p move up
+   bindsym $mod+Shift+f move right
+
+   bindsym $mod+Shift+Left move left
+   bindsym $mod+Shift+Down move down
+   bindsym $mod+Shift+Up move up
+   bindsym $mod+Shift+Right move right
+
+   # Split containers
+   bindsym $mod+v split v
+   bindsym $mod+h split h
+
+   # Fullscreen
+   bindsym $mod+Alt+f fullscreen toggle
+
+   # Container layouts
+   bindsym $mod+s layout stacking
+   bindsym $mod+t layout tabbed
+   bindsym $mod+w layout toggle split
+
+   #==========================================
+   # Gaps
+   #==========================================
+   gaps inner 5
+   gaps outer 2
+
+   #==========================================
+   # Workspaces
+   #==========================================
+   set $ws1 "1:"
+   set $ws2 "2:"
+   set $ws3 "3:"
+   set $ws4 "4:"
+   set $ws5 "5:"
+   set $ws6 "6:"
+   set $ws7 "7:"
+   set $ws8 "8:"
+   set $ws9 "9:"
+
+   # Switch to workspace
+   bindsym $mod+1 workspace number $ws1
+   bindsym $mod+2 workspace number $ws2
+   bindsym $mod+3 workspace number $ws3
+   bindsym $mod+4 workspace number $ws4
+   bindsym $mod+5 workspace number $ws5
+   bindsym $mod+6 workspace number $ws6
+   bindsym $mod+7 workspace number $ws7
+   bindsym $mod+8 workspace number $ws8
+   bindsym $mod+9 workspace number $ws9
+
+   # Move focused container to workspace
+   bindsym $mod+Shift+1 move container to workspace number $ws1
+   bindsym $mod+Shift+2 move container to workspace number $ws2
+   bindsym $mod+Shift+3 move container to workspace number $ws3
+   bindsym $mod+Shift+4 move container to workspace number $ws4
+   bindsym $mod+Shift+5 move container to workspace number $ws5
+   bindsym $mod+Shift+6 move container to workspace number $ws6
+   bindsym $mod+Shift+7 move container to workspace number $ws7
+   bindsym $mod+Shift+8 move container to workspace number $ws8
+   bindsym $mod+Shift+9 move container to workspace number $ws9
+
+   workspace_layout tabbed
+
+   #==========================================
+   # Resize Mode
+   #==========================================
+   mode "resize" {
+       bindsym b resize shrink width 10 px or 10 ppt  # Left
+       bindsym n resize grow height 10 px or 10 ppt   # Down
+       bindsym p resize shrink height 10 px or 10 ppt # Up
+       bindsym f resize grow width 10 px or 10 ppt    # Right
+
+       bindsym Left resize shrink width 10 px or 10 ppt
+       bindsym Down resize grow height 10 px or 10 ppt
+       bindsym Up resize shrink height 10 px or 10 ppt
+       bindsym Right resize grow width 10 px or 10 ppt
+
+       bindsym Return mode "default"
+       bindsym Escape mode "default"
+       bindsym $mod+r mode "default"
+   }
+
+   bindsym $mod+r mode "resize"
+
+   #==========================================
+   # System Controls
+   #==========================================
+   bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +5%
+   bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -5%
+   bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle
+   bindsym XF86AudioPlay exec --no-startup-id playerctl play-pause
+   bindsym XF86AudioNext exec --no-startup-id playerctl next
+   bindsym XF86AudioPrev exec --no-startup-id playerctl previous
+
+   bindsym XF86MonBrightnessUp exec --no-startup-id brightnessctl set +10%
+   bindsym XF86MonBrightnessDown exec --no-startup-id brightnessctl set 10%-
+
+   #==========================================
+   # i3 Management
+   #==========================================
+   bindsym $mod+Shift+c reload
+   bindsym $mod+Shift+r restart
+   bindsym $mod+Shift+e exec "i3-msg exit"
+
+   #==========================================
+   # Include Theme Colors
+   #==========================================
+   include ~/.config/i3/colors
+   #+END_SRC
+
+** Theme Color Files
+
+*** Rouge Theme Colors
+
+    Save as =~/.config/themes/rouge/i3/colors=:
+
+    #+BEGIN_SRC conf
+    # Rouge Theme Colors for i3
+    # class                 border  background text    indicator
+    client.focused          #8C3A3A #8C3A3A #dcd7ba #8C3A3A
+    client.focused_inactive #A67A5B #A67A5B #dcd7ba #A67A5B
+    client.unfocused        #363646 #363646 #727169 #292d2e
+    client.urgent           #A64242 #A64242 #dcd7ba #A64242
+    client.placeholder      #1f1f28 #1f1f28 #727169 #1f1f28
+
+    client.background       #1f1f28
+
+    # Bar colors (for i3bar)
+    bar {
+        colors {
+            background #1f1f28
+            statusline #dcd7ba
+            separator  #727169
+
+            focused_workspace  #8C3A3A #8C3A3A #dcd7ba
+            active_workspace   #A67A5B #A67A5B #dcd7ba
+            inactive_workspace #363646 #363646 #727169
+            urgent_workspace   #A64242 #A64242 #dcd7ba
+        }
+    }
+    #+END_SRC
+
+*** Kanagawa Theme Colors
+
+    Save as =~/.config/themes/kanagawa/i3/colors=:
+
+    #+BEGIN_SRC conf
+    # Kanagawa Theme Colors for i3
+    # class                 border  background text    indicator
+    client.focused          #2D4F67 #2D4F67 #dcd7ba #2D4F67
+    client.focused_inactive #C0A36E #C0A36E #dcd7ba #C0A36E
+    client.unfocused        #363646 #363646 #727169 #292d2e
+    client.urgent           #FF5D62 #FF5D62 #dcd7ba #FF5D62
+    client.placeholder      #1f1f28 #1f1f28 #727169 #1f1f28
+
+    client.background       #1f1f28
+
+    # Bar colors (for i3bar)
+    bar {
+        colors {
+            background #1f1f28
+            statusline #dcd7ba
+            separator  #727169
+
+            focused_workspace  #2D4F67 #2D4F67 #dcd7ba
+            active_workspace   #C0A36E #C0A36E #dcd7ba
+            inactive_workspace #363646 #363646 #727169
+            urgent_workspace   #FF5D62 #FF5D62 #dcd7ba
+        }
+    }
+    #+END_SRC
+
+** Theme Switcher Integration
+
+*** Update Theme Switcher Script
+
+    Add the following to your =~/.local/bin/theme-switcher= script:
+
+    #+BEGIN_SRC bash
+    # Apply i3 theme
+    if [ -f "$theme_dir/i3/colors" ]; then
+        mkdir -p ~/.config/i3
+        cp "$theme_dir/i3/colors" ~/.config/i3/colors
+        echo "  → i3 colors applied"
+    fi
+    #+END_SRC
+
+*** Update Reload Function
+
+    Add to the =reload_apps= function in your theme switcher:
+
+    #+BEGIN_SRC bash
+    # Reload i3
+    if command -v i3-msg >/dev/null; then
+        i3-msg restart >/dev/null 2>&1
+        echo "  → i3 reloaded"
+    fi
+    #+END_SRC
+
+** Installation Steps
+
+*** 1. Create Directory Structure
+    #+BEGIN_SRC bash
+    mkdir -p ~/.config/i3
+    mkdir -p ~/.config/themes/{rouge,kanagawa}/i3
+    #+END_SRC
+
+*** 2. Create Configuration Files
+    - Copy the main configuration to =~/.config/i3/config=
+    - Copy the theme color files to their respective directories
+
+*** 3. Set Initial Theme
+    #+BEGIN_SRC bash
+    theme-switcher rouge
+    #+END_SRC
+
+*** 4. Restart i3
+    #+BEGIN_SRC bash
+    i3-msg restart
+    #+END_SRC
+
+** Key Features
+
+*** Theme Switching Keybindings
+    - =$mod+Shift+t= :: Switch to next theme
+    - =$mod+Ctrl+t= :: Reload current theme
+    - =$mod+Alt+t= :: Switch to Rouge theme
+    - =$mod+Shift+Alt+t= :: Switch to Kanagawa theme
+
+*** Enhanced Workspaces
+    - Named workspaces with icons
+    - 9 workspaces for better organization
+    - Workspace names: Terminal, Browser, Files, Media, etc.
+
+*** Improved Keybindings
+    - Better terminal (alacritty instead of xterm)
+    - Media controls (volume, brightness, music)
+    - Both vim-style and arrow key navigation
+
+*** System Integration
+    - Volume and brightness controls
+    - Media player controls
+    - Proper shutdown/restart bindings
+
+** Theme Visual Differences
+
+*** Rouge Theme
+    - *Focused Window*: Burgundy borders and background (#8C3A3A)
+    - *Inactive Focused*: Warm brown (#A67A5B)
+    - *Urgent*: Deep red (#A64242)
+    - *Workspaces*: Burgundy active, brown inactive
+
+*** Kanagawa Theme
+    - *Focused Window*: Wave blue borders and background (#2D4F67)
+    - *Inactive Focused*: Autumn gold (#C0A36E)
+    - *Urgent*: Sunrise red (#FF5D62)
+    - *Workspaces*: Blue active, gold inactive
+
+** Usage Commands
+
+*** Theme Switching
+    #+BEGIN_SRC bash
+    theme-switcher rouge      # Switch to Rouge theme
+    theme-switcher kanagawa   # Switch to Kanagawa theme
+    theme-switcher next       # Cycle to next theme
+    theme-switcher reload     # Reload current theme
+    #+END_SRC
+
+*** i3 Management
+    #+BEGIN_SRC bash
+    i3-msg restart           # Restart i3
+    i3-msg reload            # Reload configuration
+    i3-msg exit              # Exit i3
+    #+END_SRC
+
+** Customization Tips
+
+*** Changing Terminal
+    Replace =alacritty= with your preferred terminal:
+    #+BEGIN_SRC conf
+    bindsym $mod+Return exec kitty
+    # or
+    bindsym $mod+Return exec xterm
+    #+END_SRC
+
+*** Adding Applications to Workspaces
+    Assign applications to specific workspaces:
+    #+BEGIN_SRC conf
+    assign [class="Firefox"] $ws2
+    assign [class="Thunar"] $ws3
+    assign [class="Spotify"] $ws4
+    #+END_SRC
+
+*** Changing Gaps
+    Adjust gap sizes:
+    #+BEGIN_SRC conf
+    gaps inner 10
+    gaps outer 5
+    #+END_SRC
+
+** Troubleshooting
+
+*** Colors Not Changing
+    - Check if =~/.config/i3/colors= file exists
+    - Verify i3 configuration includes the colors file
+    - Restart i3 after theme change
+
+*** Keybindings Not Working
+    - Check for conflicts with existing bindings
+    - Verify modifier key is correct (=Mod4= is usually Super/Windows key)
+    - Restart i3 after configuration changes
+
+*** Workspace Icons Missing
+    - Install Nerd Fonts for icon support
+    - Use different font if icons don't display
+
+This configuration provides a complete, theme-ready i3 setup that integrates seamlessly with your theme switching system!
+```
