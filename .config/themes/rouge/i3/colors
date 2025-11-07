@@ -1,0 +1,24 @@
+# Rouge Theme Colors for i3
+# class                 border  background text    indicator
+client.focused          #8C3A3A #8C3A3A #dcd7ba #8C3A3A
+client.focused_inactive #A67A5B #A67A5B #dcd7ba #A67A5B
+client.unfocused        #363646 #363646 #727169 #292d2e
+client.urgent           #A64242 #A64242 #dcd7ba #A64242
+client.placeholder      #1f1f28 #1f1f28 #727169 #1f1f28
+
+client.background       #1f1f28
+
+# Bar colors (for i3bar)
+bar {
+    colors {
+        background #1f1f28
+        statusline #dcd7ba
+        separator  #727169
+
+        focused_workspace  #8C3A3A #8C3A3A #dcd7ba
+        active_workspace   #A67A5B #A67A5B #dcd7ba
+        inactive_workspace #363646 #363646 #727169
+        urgent_workspace   #A64242 #A64242 #dcd7ba
+    }
+}
+
