@@ -1,0 +1,368 @@
+```org
+#+TITLE: Bash Theme Configuration
+#+AUTHOR: Generated from .bashrc configuration
+#+DATE: {{{date(%Y-%m-%d)}}}
+
+* Bash Theme Configuration
+  :PROPERTIES:
+  :TOC:      deep
+  :END:
+
+** Overview
+   This configuration provides two beautiful themes for your bash prompt:
+   - =ROUGE=: Warm, rich burgundy and gold colors
+   - =KANAGAWA=: Japanese-inspired wave and autumn colors
+
+** Installation
+   Save this content as =~/.bashrc= or merge with your existing configuration.
+
+** Configuration Code
+
+   #+BEGIN_SRC bash
+   # ~/.bashrc: executed by bash(1) for non-login shells.
+
+   # If not running interactively, don't do anything
+   [[ $- != *i* ]] && return
+
+   # Theme setting - default to ROUGE if not set
+   THEME=${THEME:-"ROUGE"}
+
+   # ------------------------------------------------------------
+   # Aliases
+   # ------------------------------------------------------------
+   alias ls='ls --color=auto'
+   alias ll='ls -lah'
+   alias grep='grep --color=auto'
+   alias vi='vim'
+   alias ..='cd ..'
+   alias ...='cd ../..'
+
+   # ------------------------------------------------------------
+   # Evals
+   # ------------------------------------------------------------
+   if command -v direnv &>/dev/null; then
+       eval "$(direnv hook bash)"
+   fi
+
+   # ------------------------------------------------------------
+   # Color Palettes
+   # ------------------------------------------------------------
+   # Rouge theme colors (Warm, rich palette)
+   ROUGE_USER_COLOR="\[\033[38;5;167m\]"      # Burgundy Red (#8C3A3A)
+   ROUGE_HOST_COLOR="\[\033[38;5;95m\]"       # Warm Brown (#A67A5B)
+   ROUGE_DIR_COLOR="\[\033[38;5;137m\]"       # Muted Gold (#B8A26D)
+   ROUGE_MODIFIED_COLOR="\[\033[38;5;131m\]"  # Deep Red (#A64242)
+   ROUGE_ADDED_COLOR="\[\033[38;5;107m\]"     # Muted Green (#5A8E7F)
+   ROUGE_DELETED_COLOR="\[\033[38;5;167m\]"   # Burgundy (#8C3A3A)
+   ROUGE_UNTRACKED_COLOR="\[\033[38;5;180m\]" # Light Gold (#D4B483)
+   ROUGE_PROMPT_SYMBOL_COLOR="\[\033[38;5;95m\]" # Warm Brown (#A67A5B)
+   ROUGE_RESET="\[\033[0m\]"
+
+   # Kanagawa theme colors (Japanese-inspired palette)
+   KANAGAWA_USER_COLOR="\[\033[38;5;67m\]"    # Wave Blue (#2D4F67)
+   KANAGAWA_HOST_COLOR="\[\033[38;5;130m\]"   # Autumn Gold (#C0A36E)
+   KANAGAWA_DIR_COLOR="\[\033[38;5;108m\]"    # Sage Green (#6A9589)
+   KANAGAWA_MODIFIED_COLOR="\[\033[38;5;203m\]" # Sunrise Red (#FF5D62)
+   KANAGAWA_ADDED_COLOR="\[\033[38;5;109m\]"  # Sky Blue (#7FB4CA)
+   KANAGAWA_DELETED_COLOR="\[\033[38;5;131m\]" # Deep Red (#A64242)
+   KANAGAWA_UNTRACKED_COLOR="\[\033[38;5;180m\]" # Warm Beige (#E6C384)
+   KANAGAWA_PROMPT_SYMBOL_COLOR="\[\033[38;5;247m\]" # Parchment (#DCD7BA)
+   KANAGAWA_RESET="\[\033[0m\]"
+
+   # ------------------------------------------------------------
+   # Git Status Count
+   # ------------------------------------------------------------
+   git_status_counts_prompt() {
+       if git rev-parse --is-inside-work-tree &>/dev/null; then
+           local branch=$(git symbolic-ref --short HEAD 2>/dev/null || git describe --tags --exact-match 2>/dev/null || git rev-parse --short HEAD 2>/dev/null)
+           
+           local modified=$(git status --porcelain | grep -c '^ M')
+           local added=$(git status --porcelain | grep -c '^A')
+           local deleted=$(git status --porcelain | grep -c '^D')
+           local untracked=$(git status --porcelain | grep -c '^??')
+           
+           local git_status=""
+           local user_color dir_color modified_color added_color deleted_color untracked_color
+
+           case "$THEME" in
+               "ROUGE")
+                   user_color="$ROUGE_USER_COLOR"
+                   dir_color="$ROUGE_DIR_COLOR"
+                   modified_color="$ROUGE_MODIFIED_COLOR"
+                   added_color="$ROUGE_ADDED_COLOR"
+                   deleted_color="$ROUGE_DELETED_COLOR"
+                   untracked_color="$ROUGE_UNTRACKED_COLOR"
+                   ;;
+               "KANAGAWA")
+                   user_color="$KANAGAWA_USER_COLOR"
+                   dir_color="$KANAGAWA_DIR_COLOR"
+                   modified_color="$KANAGAWA_MODIFIED_COLOR"
+                   added_color="$KANAGAWA_ADDED_COLOR"
+                   deleted_color="$KANAGAWA_DELETED_COLOR"
+                   untracked_color="$KANAGAWA_UNTRACKED_COLOR"
+                   ;;
+               *)
+                   user_color="$ROUGE_USER_COLOR"
+                   dir_color="$ROUGE_DIR_COLOR"
+                   modified_color="$ROUGE_MODIFIED_COLOR"
+                   added_color="$ROUGE_ADDED_COLOR"
+                   deleted_color="$ROUGE_DELETED_COLOR"
+                   untracked_color="$ROUGE_UNTRACKED_COLOR"
+                   ;;
+           esac
+
+           # Add branch name
+           git_status+="${dir_color}(${branch}) "
+
+           # Add status indicators
+           [ "$modified" -gt 0 ] && git_status+="${modified_color}M:$modified "
+           [ "$added" -gt 0 ] && git_status+="${added_color}A:$added "
+           [ "$deleted" -gt 0 ] && git_status+="${deleted_color}D:$deleted "
+           [ "$untracked" -gt 0 ] && git_status+="${untracked_color}U:$untracked "
+
+           echo "$git_status"
+       else
+           echo ""
+       fi
+   }
+
+   # ------------------------------------------------------------
+   # Prompt Configuration
+   # ------------------------------------------------------------
+   configure_prompt() {
+       local user_color host_color dir_color prompt_symbol_color reset
+
+       case "$THEME" in
+           "ROUGE")
+               user_color="$ROUGE_USER_COLOR"
+               host_color="$ROUGE_HOST_COLOR"
+               dir_color="$ROUGE_DIR_COLOR"
+               prompt_symbol_color="$ROUGE_PROMPT_SYMBOL_COLOR"
+               reset="$ROUGE_RESET"
+               ;;
+           "KANAGAWA")
+               user_color="$KANAGAWA_USER_COLOR"
+               host_color="$KANAGAWA_HOST_COLOR"
+               dir_color="$KANAGAWA_DIR_COLOR"
+               prompt_symbol_color="$KANAGAWA_PROMPT_SYMBOL_COLOR"
+               reset="$KANAGAWA_RESET"
+               ;;
+           *)
+               user_color="$ROUGE_USER_COLOR"
+               host_color="$ROUGE_HOST_COLOR"
+               dir_color="$ROUGE_DIR_COLOR"
+               prompt_symbol_color="$ROUGE_PROMPT_SYMBOL_COLOR"
+               reset="$ROUGE_RESET"
+               ;;
+       esac
+
+       # Build the PS1 with proper escaping
+       PS1="${user_color}\u@${host_color}\h ${dir_color}\w \$(git_status_counts_prompt)${prompt_symbol_color}\\\$${reset} "
+   }
+
+   # ------------------------------------------------------------
+   # Theme Switching Functions
+   # ------------------------------------------------------------
+   theme_rouge() {
+       export THEME="ROUGE"
+       configure_prompt
+       echo "🎨 Theme set to ROUGE (Burgundy & Gold)"
+   }
+
+   theme_kanagawa() {
+       export THEME="KANAGAWA"
+       configure_prompt
+       echo "🎨 Theme set to KANAGAWA (Wave & Autumn)"
+   }
+
+   # Cycle through themes
+   theme_next() {
+       case "$THEME" in
+           "ROUGE") theme_kanagawa ;;
+           "KANAGAWA") theme_rouge ;;
+           *) theme_rouge ;;
+       esac
+   }
+
+   # Show current theme
+   theme() {
+       echo "Current theme: $THEME"
+       echo "Available themes: ROUGE, KANAGAWA"
+       echo "Switch with: theme_rouge, theme_kanagawa, theme_next"
+   }
+
+   # ------------------------------------------------------------
+   # Initialize Prompt
+   # ------------------------------------------------------------
+   configure_prompt
+
+   # ------------------------------------------------------------
+   # Path
+   # ------------------------------------------------------------
+   export PATH=$HOME/bin:/usr/local/bin:$PATH
+
+   # ------------------------------------------------------------
+   # Environment Variables
+   # ------------------------------------------------------------
+   export EDITOR=micro
+   export HISTSIZE=10000
+   export HISTFILESIZE=20000
+   export HISTCONTROL=ignoredups:erasedups
+   export HISTIGNORE="&:ls:[bf]g:exit:theme_*"
+   shopt -s histappend
+
+   # ------------------------------------------------------------
+   # History Search
+   # ------------------------------------------------------------
+   bind '"\e[A": history-search-backward'
+   bind '"\e[B": history-search-forward'
+
+   # ------------------------------------------------------------
+   # Aliases for Safety
+   # ------------------------------------------------------------
+   alias rm='rm -i'
+   alias cp='cp -i'
+   alias mv='mv -i'
+
+   # ------------------------------------------------------------
+   # Theme Aliases (Quick Switching)
+   # ------------------------------------------------------------
+   alias tr='theme_rouge'
+   alias tk='theme_kanagawa'
+   alias tn='theme_next'
+   alias t='theme'
+
+   # ------------------------------------------------------------
+   # Functions
+   # ------------------------------------------------------------
+   extract() {
+       if [ -f "$1" ] ; then
+           case "$1" in
+               *.tar.bz2)   tar xjf "$1" ;;
+               *.tar.gz)    tar xzf "$1" ;;
+               *.bz2)       bunzip2 "$1" ;;
+               *.rar)       unrar x "$1" ;;
+               *.gz)        gunzip "$1" ;;
+               *.tar)       tar xf "$1" ;;
+               *.tbz2)      tar xjf "$1" ;;
+               *.tgz)       tar xzf "$1" ;;
+               *.zip)       unzip "$1" ;;
+               *.Z)         uncompress "$1" ;;
+               *.7z)        7z x "$1" ;;
+               *)           echo "'$1' cannot be extracted via extract()" ;;
+           esac
+       else
+           echo "'$1' is not a valid file"
+       fi
+   }
+
+   # ------------------------------------------------------------
+   # Source Other Files
+   # ------------------------------------------------------------
+   if [ -f ~/.bash_aliases ]; then
+       . ~/.bash_aliases
+   fi
+
+   # Reload bashrc
+   alias reload='source ~/.bashrc'
+
+   # ------------------------------------------------------------
+   # Auto-completion for theme commands
+   # ------------------------------------------------------------
+   _theme_completion() {
+       local cur prev themes
+       COMPREPLY=()
+       cur="${COMP_WORDS[COMP_CWORD]}"
+       prev="${COMP_WORDS[COMP_CWORD-1]}"
+       themes="rouge kanagawa"
+       
+       if [ "$prev" = "theme" ]; then
+           COMPREPLY=( $(compgen -W "$themes" -- "$cur") )
+           return 0
+       fi
+   }
+
+   complete -F _theme_completion theme
+   #+END_SRC
+
+** Theme Switching Methods
+
+*** Quick Alias Commands
+    - =tr= :: Switch to Rouge theme
+    - =tk= :: Switch to Kanagawa theme  
+    - =tn= :: Cycle to next theme
+    - =t=  :: Show current theme
+
+*** Function Commands
+    - =theme_rouge=     :: Switch to Rouge theme
+    - =theme_kanagawa=  :: Switch to Kanagawa theme
+    - =theme_next=      :: Cycle between themes
+    - =theme=           :: Show current theme info
+
+*** Environment Variable
+    #+BEGIN_SRC bash
+    export THEME="KANAGAWA"    # Set in your ~/.bash_profile or ~/.profile
+    reload                     # Reload to apply
+    #+END_SRC
+
+*** Persistent Setting
+    Add to your =~/.bash_profile= or =~/.profile=:
+    #+BEGIN_SRC bash
+    # Set default theme
+    export THEME="KANAGAWA"
+    #+END_SRC
+
+*** Keyboard Shortcut (Optional)
+    Add to your =~/.inputrc=:
+    #+BEGIN_SRC bash
+    # Press Alt+t to cycle themes
+    "\et": "theme_next\n"
+    #+END_SRC
+
+** Theme Colors Reference
+
+*** Rouge Theme Colors
+    | Color Name          | HEX Code | Description          |
+    |---------------------+----------+----------------------|
+    | Burgundy Red        | #8C3A3A  | User color           |
+    | Warm Brown          | #A67A5B  | Host & prompt color  |
+    | Muted Gold          | #B8A26D  | Directory color      |
+    | Deep Red            | #A64242  | Modified files       |
+    | Muted Green         | #5A8E7F  | Added files          |
+    | Light Gold          | #D4B483  | Untracked files      |
+
+*** Kanagawa Theme Colors  
+    | Color Name          | HEX Code | Description          |
+    |---------------------+----------+----------------------|
+    | Wave Blue           | #2D4F67  | User color           |
+    | Autumn Gold         | #C0A36E  | Host color           |
+    | Sage Green          | #6A9589  | Directory color      |
+    | Sunrise Red         | #FF5D62  | Modified files       |
+    | Sky Blue            | #7FB4CA  | Added files          |
+    | Warm Beige          | #E6C384  | Untracked files      |
+    | Parchment           | #DCD7BA  | Prompt symbol        |
+
+** Features
+   - ✅ Quick alias commands for theme switching
+   - ✅ Cycle through themes with single command
+   - ✅ Persistent theme setting via environment variable
+   - ✅ Auto-completion for theme commands
+   - ✅ Theme history ignored (doesn't clutter history)
+   - ✅ Visual feedback when switching themes
+   - ✅ Git integration with theme-aware colors
+
+** Usage Examples
+   #+BEGIN_SRC bash
+   # Switch to Kanagawa theme
+   tk
+   
+   # Show current theme
+   t
+   
+   # Cycle to next theme
+   tn
+   
+   # Reload configuration
+   reload
+   #+END_SRC
+```
