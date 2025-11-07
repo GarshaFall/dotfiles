@@ -1,0 +1,484 @@
+#+TITLE: Fedora i3 Desktop Configuration with Emacs Keybindings
+#+AUTHOR: GarshaFall
+#+DATE: {{{date(%Y-%m-%d)}}}
+
+* Fedora i3 Desktop Configuration
+
+  A beautiful, minimal Fedora i3 desktop configuration with Emacs-like keybindings and theme switching capabilities.
+
+* Features
+  - *Emacs Keybindings*: Familiar Emacs-style navigation throughout i3
+  - *Dual Theme System*: Switch between Rouge and Kanagawa themes
+  - *Consistent Colors*: Unified color scheme across all applications
+  - *Minimal & Fast*: Lightweight applications for optimal performance
+  - *Developer-Friendly*: Full development environment setup
+
+* Color Palettes
+
+** Rouge Theme (Warm & Elegant)
+   | Color       | HEX      | Usage                  |
+   |-------------+----------+------------------------|
+   | Primary     | #8C3A3A  | Burgundy red - accents |
+   | Secondary   | #A67A5B  | Warm brown - inactive  |
+   | Background  | #1f1f28  | Dark background        |
+   | Text        | #dcd7ba  | Parchment - primary    |
+   | Accent      | #B8A26D  | Muted gold - highlights|
+   | Alert       | #A64242  | Deep red - warnings    |
+
+** Kanagawa Theme (Serene & Japanese)
+   | Color       | HEX      | Usage                  |
+   |-------------+----------+------------------------|
+   | Primary     | #2D4F67  | Wave blue - accents    |
+   | Secondary   | #C0A36E  | Autumn gold - inactive |
+   | Background  | #1f1f28  | Dark background        |
+   | Text        | #dcd7ba  | Parchment - primary    |
+   | Accent      | #6A9589  | Sage green - highlights|
+   | Alert       | #FF5D62  | Sunrise red - warnings |
+
+* Quick Start
+
+** Prerequisites
+   - Fedora i3 Spin (pre-installed with i3)
+   - Basic familiarity with Emacs keybindings
+
+** Installation
+   #+BEGIN_SRC bash
+   # Update system
+   sudo dnf update
+
+   # Install all essential packages
+   sudo dnf install \
+       xterm nemo firefox vlc feh micro emacs \
+       gcc gcc-c++ clang python3 python3-pip \
+       polybar rofi picom papirus-icon-theme \
+       htop neofetch arandr unzip lxappearance \
+       fontawesome-fonts fira-code-fonts \
+       flameshot xclip xsel \
+       network-manager-applet blueman pavucontrol \
+       dunst nitrogen git ripgrep fd-find fzf
+
+   # Install media codecs
+   sudo dnf install https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm
+   sudo dnf install https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
+   sudo dnf install gstreamer1-plugins-{bad-*,good-*,base} gstreamer1-plugin-openh264 gstreamer1-libav --exclude=gstreamer1-plugins-bad-free-devel
+   #+END_SRC
+
+** Font Setup
+   #+BEGIN_SRC bash
+   # Install Nerd Fonts for icons
+   mkdir -p ~/.local/share/fonts
+   cd ~/.local/share/fonts
+   wget https://github.com/ryanoasis/nerd-fonts/releases/download/v3.1.1/FiraCode.zip
+   unzip FiraCode.zip
+   fc-cache -fv
+   #+END_SRC
+
+* Emacs Keybindings in i3
+
+** Core Navigation (Emacs Style)
+   | Keybinding | Action          | Emacs Equivalent            |
+   |------------+-----------------+-----------------------------|
+   | Ctrl + F   | Focus right     | C-f (forward-char)          |
+   | Ctrl + B   | Focus left      | C-b (backward-char)         |
+   | Ctrl + N   | Focus down      | C-n (next-line)             |
+   | Ctrl + P   | Focus up        | C-p (previous-line)         |
+   | Ctrl + A   | Focus parent    | C-a (move-beginning-of-line) |
+   | Ctrl + E   | Focus child     | C-e (move-end-of-line)      |
+
+** Window Management
+   | Keybinding  | Action               | Emacs Equivalent       |
+   |-------------+----------------------+------------------------|
+   | Ctrl + X    | Prefix for commands  | C-x (prefix)           |
+   | Ctrl + X 0  | Close window         | C-x 0 (delete-window)  |
+   | Ctrl + X 1  | Make fullscreen      | C-x 1 (delete-others)  |
+   | Ctrl + X 2  | Split vertically     | C-x 2 (split-below)    |
+   | Ctrl + X 3  | Split horizontally   | C-x 3 (split-right)    |
+   | Ctrl + X O  | Focus next window    | C-x o (other-window)   |
+   | Ctrl + X K  | Kill window          | C-x k (kill-buffer)    |
+
+** Application Launchers
+   | Keybinding       | Action                  |
+   |------------------+-------------------------|
+   | Ctrl + X Ctrl + F | File manager (Nemo)    |
+   | Ctrl + X Ctrl + T | Terminal (XTerm)       |
+   | Ctrl + X Ctrl + B | Web browser (Firefox)  |
+   | Ctrl + X Ctrl + E | Editor (Emacs)         |
+   | Ctrl + X Ctrl + M | Micro editor           |
+   | Ctrl + X Ctrl + D | Rofi application menu  |
+
+* Application Configuration
+
+** i3 Window Manager with Emacs Bindings
+   Save as =~/.config/i3/config=:
+
+   #+BEGIN_SRC ini
+   # Emacs-Style Keybindings
+   set $mod Mod4
+
+   # Basic Navigation (Emacs movement keys)
+   bindsym Control+f focus right
+   bindsym Control+b focus left
+   bindsym Control+n focus down
+   bindsym Control+p focus up
+   bindsym Control+a focus parent
+   bindsym Control+e focus child
+
+   # Window Management (C-x prefix)
+   bindsym Control+x slash mode "window"
+
+   # Moving windows (C-x m- for move)
+   bindsym Control+x m+f move right
+   bindsym Control+x m+b move left
+   bindsym Control+x m+n move down
+   bindsym Control+x m+p move up
+
+   # Application Launchers (C-x C- combinations)
+   bindsym Control+x Control+t exec xterm
+   bindsym Control+x Control+f exec nemo
+   bindsym Control+x Control+b exec firefox
+   bindsym Control+x Control+e exec emacs
+   bindsym Control+x Control+m exec micro
+   bindsym Control+x Control+d exec rofi -show drun
+
+   # Theme Management
+   bindsym Control+x t r exec theme-switcher rouge
+   bindsym Control+x t k exec theme-switcher kanagawa
+   bindsym Control+x t n exec theme-switcher next
+
+   # Window mode for C-x commands
+   mode "window" {
+       bindsym 0 [con_id="__focused__"] kill
+       bindsym 1 fullscreen toggle
+       bindsym 2 split v
+       bindsym 3 split h
+       bindsym o focus next
+       bindsym k [con_id="__focused__"] kill
+       
+       bindsym Return mode "default"
+       bindsym Escape mode "default"
+       bindsym Control+g mode "default"
+   }
+   #+END_SRC
+
+** Polybar Status Bar
+   Save as =~/.config/polybar/config.ini=:
+
+   #+BEGIN_SRC ini
+   [colors]
+   background = #1f1f28
+   foreground = #dcd7ba
+   primary = #8C3A3A
+   secondary = #A67A5B
+   alert = #A64242
+   disabled = #727169
+   background-alt = #363646
+
+   [bar/main]
+   width = 100%
+   height = 24pt
+   background = ${colors.background}
+   foreground = ${colors.foreground}
+   modules-left = i3 xwindow
+   modules-center = date
+   modules-right = filesystem pulseaudio memory cpu
+
+   [module/i3]
+   type = internal/i3
+   format = <label-state> <label-mode>
+   label-focused = %index%
+   label-focused-background = ${colors.primary}
+   label-unfocused = %index%
+   label-unfocused-background = ${colors.background-alt}
+   #+END_SRC
+
+** Rofi Application Launcher
+   Save as =~/.config/rofi/config.rasi=:
+
+   #+BEGIN_SRC css
+   @theme "theme"
+
+   configuration {
+       modi: "drun,run,window";
+       show-icons: true;
+       terminal: "xterm";
+   }
+
+   window {
+       background-color: #1f1f28;
+       border: 2px;
+       border-color: #2D4F67;
+       border-radius: 8px;
+       width: 40%;
+       location: center;
+   }
+
+   mainbox {
+       children: [inputbar, listview];
+       padding: 12px;
+   }
+
+   inputbar {
+       children: [prompt, entry];
+   }
+
+   prompt {
+       background-color: #8C3A3A;
+       color: #1f1f28;
+       padding: 8px;
+       border-radius: 4px;
+   }
+   #+END_SRC
+
+* Theme Switching System
+
+** Directory Structure
+    #+BEGIN_SRC text
+    ~/.config/
+    ├── themes/
+    │   ├── rouge/
+    │   │   ├── i3/colors
+    │   │   ├── polybar/colors
+    │   │   ├── rofi/theme.rasi
+    │   │   └── Xresources
+    │   └── kanagawa/
+    │       ├── i3/colors
+    │       ├── polybar/colors
+    │       ├── rofi/theme.rasi
+    │       └── Xresources
+    └── theme-switcher (script)
+    #+END_SRC
+
+** Theme Switcher Script
+    Save as =~/.local/bin/theme-switcher=:
+
+    #+BEGIN_SRC bash
+    #!/bin/bash
+    THEMES_DIR="$HOME/.config/themes"
+    CURRENT_THEME_LINK="$THEMES_DIR/current"
+
+    get_current_theme() {
+        if [ -L "$CURRENT_THEME_LINK" ]; then
+            basename $(readlink "$CURRENT_THEME_LINK")
+        else
+            echo "none"
+        fi
+    }
+
+    apply_theme() {
+        local theme="$1"
+        local theme_dir="$THEMES_DIR/$theme"
+        
+        echo "Applying $theme theme..."
+        
+        # Apply i3 theme
+        if [ -f "$theme_dir/i3/colors" ]; then
+            mkdir -p ~/.config/i3
+            cp "$theme_dir/i3/colors" ~/.config/i3/colors
+        fi
+        
+        # Apply polybar theme
+        if [ -f "$theme_dir/polybar/colors" ]; then
+            mkdir -p ~/.config/polybar
+            cp "$theme_dir/polybar/colors" ~/.config/polybar/colors
+        fi
+        
+        # Apply rofi theme
+        if [ -f "$theme_dir/rofi/theme.rasi" ]; then
+            mkdir -p ~/.config/rofi
+            cp "$theme_dir/rofi/theme.rasi" ~/.config/rofi/theme.rasi
+        fi
+        
+        # Apply Xresources
+        if [ -f "$theme_dir/Xresources" ]; then
+            cp "$theme_dir/Xresources" ~/.config/Xresources
+            xrdb -merge ~/.Xresources
+        fi
+        
+        echo "Theme $theme applied successfully!"
+    }
+
+    case "$1" in
+        "rouge"|"kanagawa")
+            apply_theme "$1"
+            ;;
+        "next")
+            current=$(get_current_theme)
+            case "$current" in
+                "rouge") apply_theme "kanagawa" ;;
+                "kanagawa") apply_theme "rouge" ;;
+                *) apply_theme "rouge" ;;
+            esac
+            ;;
+        "current")
+            echo "Current theme: $(get_current_theme)"
+            ;;
+        *)
+            echo "Usage: theme-switcher [rouge|kanagawa|next|current]"
+            ;;
+    esac
+    #+END_SRC
+
+** Usage
+    #+BEGIN_SRC bash
+    # Make executable
+    chmod +x ~/.local/bin/theme-switcher
+
+    # Switch themes
+    theme-switcher rouge
+    theme-switcher kanagawa
+    theme-switcher next
+    theme-switcher current
+
+    # Or use i3 keybindings
+    Ctrl+x t r    # Rouge theme
+    Ctrl+x t k    # Kanagawa theme
+    Ctrl+x t n    # Next theme
+    #+END_SRC
+
+* Essential Packages Overview
+
+** Core Applications
+   | Application | Purpose          | Keybinding        |
+   |-------------+------------------+-------------------|
+   | XTerm       | Terminal         | Ctrl+x Ctrl+t     |
+   | Nemo        | File Manager     | Ctrl+x Ctrl+f     |
+   | Firefox     | Web Browser      | Ctrl+x Ctrl+b     |
+   | VLC         | Media Player     | (No default bind) |
+   | Micro       | Text Editor      | Ctrl+x Ctrl+m     |
+   | Emacs       | Code Editor      | Ctrl+x Ctrl+e     |
+
+** System Components
+   | Component    | Purpose                |
+   |--------------+------------------------|
+   | Polybar      | Status Bar             |
+   | Rofi         | Application Launcher   |
+   | Picom        | Compositor             |
+   | Dunst        | Notifications          |
+   | Papirus Icons| Icon Theme             |
+
+** Development Tools
+   | Tool        | Purpose               |
+   |-------------+-----------------------|
+   | GCC/G++     | C/C++ Compiler        |
+   | Clang       | C/C++ Compiler        |
+   | Python3     | Python Interpreter    |
+   | Git         | Version Control       |
+   | Ripgrep     | Fast searching        |
+
+* Complete Keybinding Reference
+
+** Core Navigation
+   | Keybinding | Action          |
+   |------------+-----------------|
+   | Ctrl + F   | Focus right     |
+   | Ctrl + B   | Focus left      |
+   | Ctrl + N   | Focus down      |
+   | Ctrl + P   | Focus up        |
+   | Ctrl + A   | Focus parent    |
+   | Ctrl + E   | Focus child     |
+
+** Window Management
+   | Keybinding  | Action               |
+   |-------------+----------------------|
+   | Ctrl + X 0  | Close window         |
+   | Ctrl + X 1  | Fullscreen toggle    |
+   | Ctrl + X 2  | Split vertically     |
+   | Ctrl + X 3  | Split horizontally   |
+   | Ctrl + X O  | Focus next window    |
+   | Ctrl + X K  | Kill window          |
+
+** Application Launchers
+   | Keybinding       | Action                  |
+   |------------------+-------------------------|
+   | Ctrl + X Ctrl + T | Terminal (XTerm)       |
+   | Ctrl + X Ctrl + F | File Manager (Nemo)    |
+   | Ctrl + X Ctrl + B | Web Browser (Firefox)  |
+   | Ctrl + X Ctrl + E | Editor (Emacs)         |
+   | Ctrl + X Ctrl + M | Micro Editor           |
+   | Ctrl + X Ctrl + D | Rofi Application Menu  |
+
+** Theme Management
+   | Keybinding  | Action          |
+   |-------------+-----------------|
+   | Ctrl + X T R| Rouge Theme     |
+   | Ctrl + X T K| Kanagawa Theme  |
+   | Ctrl + X T N| Next Theme      |
+
+* Troubleshooting
+
+** Emacs Keybinding Issues
+    #+BEGIN_SRC bash
+    # Reload i3 configuration
+    i3-msg reload
+
+    # Check keybinding conflicts
+    i3-msg -t get_bindings | jq '.[] | .input'
+
+    # Test individual keybindings
+    i3-msg "exec xterm"
+    #+END_SRC
+
+** Theme Application
+    #+BEGIN_SRC bash
+    # Manual theme application
+    theme-switcher rouge
+    i3-msg restart
+
+    # Check current theme
+    theme-switcher current
+
+    # Reload individual components
+    pkill polybar && polybar main &
+    xrdb -merge ~/.Xresources
+    #+END_SRC
+
+** Font Issues
+    #+BEGIN_SRC bash
+    # Check font installation
+    fc-list | grep "Fira Code"
+
+    # Rebuild font cache
+    fc-cache -fv
+    #+END_SRC
+
+* Learning Tips
+
+** For Emacs Users
+    - Use =Ctrl+F/B/N/P= for navigation (familiar Emacs movement)
+    - =Ctrl+X= prefix for window operations
+    - =Ctrl+G= to cancel operations (familiar escape)
+
+** For New Users
+    - Start with basic navigation: =Ctrl+F/B/N/P=
+    - Use =Ctrl+X Ctrl+D= for application launcher
+    - Practice window splitting with =Ctrl+X 2/3=
+
+** Memory Aids
+    - *F/B/N/P*: Forward, Backward, Next, Previous
+    - *Ctrl+X*: Window operations prefix  
+    - *Ctrl+X Ctrl+*: Application launchers
+
+* Customization
+
+** Adding New Applications
+    1. Install package: =sudo dnf install package-name=
+    2. Add to i3 config: =bindsym Control+x key exec application=
+    3. Create desktop entry if needed
+
+** Creating New Themes
+    1. Copy existing theme directory
+    2. Modify color values in all config files
+    3. Test with =theme-switcher theme-name=
+
+** Performance Tips
+    - Use =htop= to monitor resource usage
+    - Disable unused services
+    - Prefer terminal applications for lightweight operation
+    - Use =ripgrep= instead of =grep= for faster searching
+
+* License
+  This configuration is free to use and modify. Feel free to customize it to your preferences!
+
+---
+
+*Enjoy your Emacs-powered i3 desktop!* 🚀
