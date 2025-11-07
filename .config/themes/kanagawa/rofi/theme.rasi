@@ -1,0 +1,148 @@
+/**
+ * Rofi Tokyonight Moon Theme (Kanagawa Variant)
+ * Serene Japanese-inspired theme
+ */
+
+* {
+    bg0:  #1f1f28;
+    bg1:  #363646;
+    bg2:  #2a2a37;
+    fg:   #dcd7ba;
+    fg1:  #c8c093;
+    fg2:  #727169;
+    
+    red:    #FF5D62;
+    orange: #C0A36E;
+    yellow: #E6C384;
+    green:  #98C379;
+    blue:   #2D4F67;
+    purple: #957FB8;
+    aqua:   #7FB4CA;
+    gray:   #727169;
+    
+    bg-col: @bg0;
+    bg-darker: @bg1;
+    bg-lighter: @bg2;
+    border-col: @blue;
+    selected-col: @blue;
+    blue-col: @blue;
+    fg-col: @fg;
+    fg-alt: @fg1;
+    fg-unimportant: @fg2;
+    accent: @orange;
+    urgent: @red;
+}
+
+window {
+    background-color: @bg-col;
+    border: 2px;
+    border-color: @border-col;
+    border-radius: 8px;
+}
+
+mainbox {
+    border: 0;
+    padding: 12px;
+}
+
+message {
+    border: 1px dash 0px 0px ;
+    border-color: @border-col;
+    background-color: @bg-col;
+    padding: 8px;
+}
+
+textbox {
+    text-color: @fg-col;
+}
+
+listview {
+    fixed-height: 0;
+    border: 0;
+    padding: 0px 0px 0px ;
+    background-color: @bg-col;
+}
+
+element {
+    border: 0;
+    padding: 4px;
+    background-color: @bg-col;
+    text-color: @fg-col;
+}
+
+element normal.normal {
+    background-color: @bg-col;
+    text-color: @fg-col;
+}
+
+element normal.urgent {
+    background-color: @urgent;
+    text-color: @bg-col;
+}
+
+element normal.active {
+    background-color: @blue-col;
+    text-color: @bg-col;
+}
+
+element selected.normal {
+    background-color: @selected-col;
+    text-color: @bg-col;
+    border-radius: 4px;
+}
+
+element selected.urgent {
+    background-color: @urgent;
+    text-color: @bg-col;
+    border-radius: 4px;
+}
+
+element selected.active {
+    background-color: @blue-col;
+    text-color: @bg-col;
+    border-radius: 4px;
+}
+
+element-icon {
+    size: 24px;
+    vertical-align: 0.5;
+}
+
+element-text {
+    vertical-align: 0.5;
+}
+
+inputbar {
+    spacing: 0;
+    padding: 8px;
+    background-color: @bg-col;
+    text-color: @fg-col;
+    border: 0;
+    children: [prompt,entry];
+}
+
+prompt {
+    background-color: @accent;
+    padding: 8px;
+    border-radius: 4px;
+    text-color: @bg-col;
+}
+
+entry {
+    padding: 8px;
+    background-color: @bg1;
+    text-color: @fg-col;
+    border-radius: 4px;
+}
+
+case-indicator {
+    background-color: @bg-col;
+    text-color: @fg-col;
+}
+
+error-message {
+    padding: 8px;
+    border-radius: 4px;
+    background-color: @red;
+    text-color: @bg-col;
+}
