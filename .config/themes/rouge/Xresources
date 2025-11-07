@@ -1,0 +1,20 @@
+! Rouge Theme Color Palette for XTerm
+XTerm*foreground: #E5C07B  ! Golden Yellow (for text)
+XTerm*background: #1f1f28  ! Dark background
+XTerm*cursorColor: #D19A66  ! Warm Orange (for cursor)
+XTerm*color0: #1f1f28  ! Dark background
+XTerm*color1: #8C3A3A  ! Burgundy Red
+XTerm*color2: #5A8E7F  ! Muted Green
+XTerm*color3: #B8A26D  ! Muted Gold
+XTerm*color4: #2D4F67  ! Wave Blue
+XTerm*color5: #957FB8  ! Muted Purple
+XTerm*color6: #7FB4CA  ! Sky Blue
+XTerm*color7: #dcd7ba  ! Parchment
+XTerm*color8: #363646  ! Dark gray
+XTerm*color9: #A64242  ! Deep Red
+XTerm*color10: #6A9589 ! Sage Green
+XTerm*color11: #D4B483 ! Light Gold
+XTerm*color12: #7FB4CA ! Sky Blue
+XTerm*color13: #B8A26D ! Muted Gold
+XTerm*color14: #56B6C2 ! Soft Cyan
+XTerm*color15: #FFFFFF ! White
