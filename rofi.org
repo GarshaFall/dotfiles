@@ -34,7 +34,7 @@
    configuration {
        modi: "drun,run,window";
        show-icons: true;
-       terminal: "alacritty";
+       terminal: "xterm";
        drun-display-format: "{icon} {name}";
        window-format: "{w} {i} {t}";
    }
