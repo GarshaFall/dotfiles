@@ -1,0 +1,209 @@
+#+TITLE: Minimal Emacs Configuration with Themes & Icons
+#+AUTHOR: GarshaFall
+#+DESCRIPTION: Minimal Emacs Configuration for Python and C++ with Theme Switching
+#+STARTUP: indent
+
+* Global Configuration
+** Package Initialization
+#+BEGIN_SRC emacs-lisp
+(require 'package)
+(setq package-archives '(("melpa" . "https://melpa.org/packages/")
+                         ("gnu" . "https://elpa.gnu.org/packages/")))
+(package-initialize)
+
+(unless (package-installed-p 'use-package)
+  (package-refresh-contents)
+  (package-install 'use-package))
+
+(setq use-package-always-ensure t)
+#+END_SRC
+
+** Core UI Configuration
+#+BEGIN_SRC emacs-lisp
+(menu-bar-mode -1)
+(tool-bar-mode -1)
+(scroll-bar-mode -1)
+
+(setq-default tab-width 2)
+(setq-default indent-tabs-mode nil)
+(global-display-line-numbers-mode t)
+(column-number-mode t)
+
+(set-face-attribute 'default nil
+  :font "Fira Mono Nerd Font"
+  :height 120)
+
+(use-package all-the-icons
+  :if (display-graphic-p))
+
+(load-theme 'timu-rouge t)
+#+END_SRC
+
+** Theme Switching System
+#+BEGIN_SRC emacs-lisp
+(defun switch-theme-rouge ()
+  "Switch to Rouge theme."
+  (interactive)
+  (mapc #'disable-theme custom-enabled-themes)
+  (load-theme 'timu-rouge t)
+  (message "🎨 Switched to Rouge theme"))
+
+(defun switch-theme-kanagawa ()
+  "Switch to Kanagawa theme."
+  (interactive)
+  (mapc #'disable-theme custom-enabled-themes)
+  (use-package kanagawa-theme
+    :ensure t
+    :config
+    (load-theme 'kanagawa t)
+    (message "🎨 Switched to Kanagawa theme")))
+
+(global-set-key (kbd "C-c T r") 'switch-theme-rouge)
+(global-set-key (kbd "C-c T k") 'switch-theme-kanagawa)
+
+(defun sync-with-system-theme ()
+  "Sync Emacs theme with system theme."
+  (let ((system-theme (getenv "THEME")))
+    (cond
+     ((string= system-theme "ROUGE") (switch-theme-rouge))
+     ((string= system-theme "KANAGAWA") (switch-theme-kanagawa)))))
+
+(add-hook 'after-init-hook 'sync-with-system-theme)
+#+END_SRC
+
+** Essential Packages
+#+BEGIN_SRC emacs-lisp
+(use-package dashboard
+  :config
+  (dashboard-setup-startup-hook)
+  (setq dashboard-startup-banner "/home/garsha/Pictures/portal_ui.png")
+  (setq dashboard-items '((recents . 10)))
+  (setq dashboard-center-content t)
+  (setq dashboard-set-heading-icons t)
+  (setq dashboard-set-file-icons t))
+
+(use-package doom-modeline
+  :init (doom-modeline-mode 1)
+  :custom 
+  (doom-modeline-height 25)
+  (doom-modeline-icon t))
+#+END_SRC
+
+* Language Support
+** Eglot LSP Configuration
+#+BEGIN_SRC emacs-lisp
+(use-package eglot
+  :hook ((python-mode . eglot-ensure)
+         (c++-mode . eglot-ensure)
+         (c-mode . eglot-ensure))
+  :config
+  (add-to-list 'eglot-server-programs
+    '(python-mode . ("pylsp")))
+  (add-to-list 'eglot-server-programs
+    '(c++-mode . ("clangd")))
+  (add-to-list 'eglot-server-programs
+    '(c-mode . ("clangd")))
+  (setq eglot-events-buffer-size 0))
+
+(use-package company
+  :hook (prog-mode . company-mode)
+  :config
+  (setq company-idle-delay 0.3
+        company-minimum-prefix-length 2))
+#+END_SRC
+
+** Language-specific Settings
+#+BEGIN_SRC emacs-lisp
+(add-hook 'python-mode-hook
+  (lambda ()
+    (setq indent-tabs-mode nil)
+    (setq python-indent-offset 4)))
+
+(add-hook 'c-mode-hook
+  (lambda ()
+    (setq c-basic-offset 4)))
+  
+(add-hook 'c++-mode-hook
+  (lambda ()
+    (setq c-basic-offset 4)))
+#+END_SRC
+
+* Essential Utilities
+** Terminal
+#+BEGIN_SRC emacs-lisp
+(use-package vterm
+  :config
+  (setq vterm-max-scrollback 5000)
+  (setq vterm-shell "/bin/bash"))
+
+(global-set-key (kbd "C-c t") 'vterm)
+#+END_SRC
+
+** Editing Helpers
+#+BEGIN_SRC emacs-lisp
+(use-package multiple-cursors
+  :bind (("C->" . mc/mark-next-like-this)
+         ("C-<" . mc/mark-previous-like-this)))
+
+(use-package move-text
+  :bind (("M-<up>" . move-text-up)
+         ("M-<down>" . move-text-down)))
+#+END_SRC
+
+* Performance Optimizations
+#+BEGIN_SRC emacs-lisp
+(setq gc-cons-threshold (* 20 1000 1000))
+(setq read-process-output-max (* 1024 1024))
+
+(setq inhibit-startup-screen t)
+(setq initial-scratch-message nil)
+
+(recentf-mode 1)
+(setq recentf-max-saved-items 50)
+
+(setq auto-save-default t)
+(setq auto-save-timeout 20)
+(setq auto-save-interval 200)
+#+END_SRC
+
+* Installation Instructions
+** Required Packages
+#+BEGIN_SRC bash
+sudo dnf install clang
+pip install python-lsp-server
+
+M-x package-install [RET] kanagawa-theme
+M-x all-the-icons-install-fonts
+#+END_SRC
+
+* Usage
+** Theme Switching
+- =C-c T r= :: Switch to Rouge theme
+- =C-c T k= :: Switch to Kanagawa theme
+- =M-x switch-theme-rouge= :: Interactive Rouge theme switch
+- =M-x switch-theme-kanagawa= :: Interactive Kanagawa theme switch
+
+** Terminal
+- =C-c t= :: Open vterm terminal
+
+** Editing
+- =C->= :: Mark next like this (multiple cursors)
+- =C-<= :: Mark previous like this (multiple cursors)
+- =M-<up>= :: Move line/selection up
+- =M-<down>= :: Move line/selection down
+
+* Features
+** ✅ Included
+- Fast startup and operation
+- Theme switching between Rouge and Kanagawa
+- Icons in dashboard and modeline
+- LSP support for Python and C/C++
+- Terminal emulation with vterm
+- Multiple cursors and line moving
+- Clean, minimal UI
+
+** ✅ Performance Maintained
+- Minimal package load
+- Optimized garbage collection
+- Efficient theme switching
+- Conditional icon loading (graphical only)
