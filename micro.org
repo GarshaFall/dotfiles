@@ -1,0 +1,297 @@
+#+TITLE: Micro Editor Configuration with Theme Switching
+#+AUTHOR: Generated from Micro Configuration
+#+DATE: {{{date(%Y-%m-%d)}}}
+
+* Micro Editor Configuration with Theme Switching
+
+** Overview
+   This configuration provides a complete Micro editor setup with support for theme switching between Rouge and Kanagawa themes. The configuration includes proper JSON formatting and theme integration.
+
+** Directory Structure
+   #+BEGIN_SRC text
+   ~/.config/
+   ├── micro/
+   │   └── settings.json       # Main configuration file
+   └── themes/
+       ├── rouge/
+       │   └── micro/
+       │       └── colorscheme  # Rouge theme colorscheme name
+       └── kanagawa/
+           └── micro/
+               └── colorscheme  # Kanagawa theme colorscheme name
+   #+END_SRC
+
+** Main Micro Configuration File
+
+   Save this as =~/.config/micro/settings.json=:
+
+   #+BEGIN_SRC json
+   {
+       "autoindent": true,
+       "basename": true,
+       "colorscheme": "dukedark-tc",
+       "divchars": "|=",
+       "fileformat": "unix",
+       "matchbracestyle": "highlight",
+       "pluginchannels": [
+           "https://raw.githubusercontent.com/micro-editor/plugin-channel/master/channel.json"
+       ],
+       "pluginrepos": [],
+       "softwrap": true,
+       "statusformatl": " ● $(filename) $(modified) «$(line),$(col)» [$(opt:filetype)-$(opt:fileformat)-$(opt:encoding)]",
+       "statusformatr": "$(bind:ToggleKeyMenu):Bind, $(bind:ToggleHelp):Help",
+       "tabstospace": false,
+       "tabsize": 4,
+       "tabmovement": true,
+       "scrollbar": true,
+       "scrollmargin": 3,
+       "syntax": true,
+       "cursorline": true,
+       "ruler": true,
+       "savecursor": true,
+       "saveundo": true,
+       "autosave": 0,
+       "colorcolumn": 80,
+       "infobar": true,
+       "diffgutter": false,
+       "ftoptions": true,
+       "ignorecase": true,
+       "smartcase": true,
+       "indentchar": " ",
+       "readonly": false,
+       "hlsearch": true,
+       "hltaberrors": true,
+       "hltrailingws": true
+   }
+   #+END_SRC
+
+** Theme Configuration Files
+
+*** Rouge Theme Colorscheme
+
+    Save as =~/.config/themes/rouge/micro/colorscheme=:
+
+    #+BEGIN_SRC text
+    dukedark-tc
+    #+END_SRC
+
+    *Note:* For Rouge theme, we'll use the existing `dukedark-tc` colorscheme which has warm tones that complement the Rouge palette.
+
+*** Kanagawa Theme Colorscheme
+
+    Save as =~/.config/themes/kanagawa/micro/colorscheme=:
+
+    #+BEGIN_SRC text
+    zenburn
+    #+END_SRC
+
+    *Note:* For Kanagawa theme, we'll use `zenburn` which has muted colors that work well with the Japanese-inspired palette. Alternatively, you can install a custom Kanagawa colorscheme.
+
+** Installing Custom Colorschemes
+
+*** Option 1: Use Built-in Colorschemes
+    Micro comes with several built-in colorschemes. Check available ones with:
+    #+BEGIN_SRC bash
+    micro -colorscheme [TAB] 
+    #+END_SRC
+
+*** Option 2: Install Kanagawa Colorscheme
+    #+BEGIN_SRC bash
+    # Create micro colorschemes directory
+    mkdir -p ~/.config/micro/colorschemes
+    
+    # Download Kanagawa colorscheme
+    curl -o ~/.config/micro/colorschemes/kanagawa.micro https://raw.githubusercontent.com/micro-editor/colorschemes/master/kanagawa.micro
+    #+END_SRC
+
+    Then update the Kanagawa colorscheme file:
+    #+BEGIN_SRC text
+    kanagawa
+    #+END_SRC
+
+** Theme Switcher Integration
+
+*** Update Theme Switcher Script
+
+    Add the following to your =~/.local/bin/theme-switcher= script:
+
+    #+BEGIN_SRC bash
+    # Apply micro theme
+    if [ -f "$theme_dir/micro/colorscheme" ]; then
+        local micro_colorscheme=$(cat "$theme_dir/micro/colorscheme")
+        mkdir -p ~/.config/micro
+        
+        # Update settings.json with new colorscheme
+        if [ -f ~/.config/micro/settings.json ]; then
+            jq --arg colorscheme "$micro_colorscheme" '.colorscheme = $colorscheme' ~/.config/micro/settings.json > ~/.config/micro/settings.json.tmp && mv ~/.config/micro/settings.json.tmp ~/.config/micro/settings.json
+            echo "  → micro colorscheme applied: $micro_colorscheme"
+        else
+            echo "  → micro settings.json not found, skipping"
+        fi
+    fi
+    #+END_SRC
+
+*** Alternative Method (without jq)
+
+    If you don't have `jq` installed, use this sed-based approach:
+
+    #+BEGIN_SRC bash
+    # Apply micro theme (sed method)
+    if [ -f "$theme_dir/micro/colorscheme" ]; then
+        local micro_colorscheme=$(cat "$theme_dir/micro/colorscheme")
+        mkdir -p ~/.config/micro
+        
+        if [ -f ~/.config/micro/settings.json ]; then
+            sed -i "s/\"colorscheme\": \".*\"/\"colorscheme\": \"$micro_colorscheme\"/" ~/.config/micro/settings.json
+            echo "  → micro colorscheme applied: $micro_colorscheme"
+        fi
+    fi
+    #+END_SRC
+
+** Installation Steps
+
+*** 1. Create Directory Structure
+    #+BEGIN_SRC bash
+    mkdir -p ~/.config/micro
+    mkdir -p ~/.config/themes/{rouge,kanagawa}/micro
+    #+END_SRC
+
+*** 2. Create Configuration Files
+    - Copy the main configuration to =~/.config/micro/settings.json=
+    - Copy the theme colorscheme files to their respective directories
+
+*** 3. Install jq (Recommended)
+    #+BEGIN_SRC bash
+    # Arch Linux
+    sudo pacman -S jq
+    
+    # Ubuntu/Debian
+    sudo apt install jq
+    
+    # macOS
+    brew install jq
+    #+END_SRC
+
+*** 4. Set Initial Theme
+    #+BEGIN_SRC bash
+    theme-switcher rouge
+    #+END_SRC
+
+** Configuration Options Explained
+
+*** Editing & Indentation
+    - =autoindent=: Automatically indent new lines
+    - =tabstospace=: Use spaces instead of tabs (false)
+    - =tabsize=: Number of spaces per tab (4)
+    - =tabmovement=: Move by tabs in whitespace
+
+*** Visual Features
+    - =cursorline=: Highlight current line
+    - =ruler=: Show line and column numbers
+    - =scrollbar=: Display scrollbar
+    - =colorcolumn=: Show column guide at 80 characters
+
+*** Search & Syntax
+    - =syntax=: Enable syntax highlighting
+    - =hlsearch=: Highlight search results
+    - =ignorecase=: Case-insensitive search
+    - =smartcase=: Case-sensitive when search contains uppercase
+
+*** Status Line
+    - =statusformatl=: Left status format
+    - =statusformatr=: Right status format
+    - =infobar=: Show information bar
+
+** Recommended Colorschemes
+
+*** For Rouge Theme
+    - =dukedark-tc=: Warm dark theme with good contrast
+    - =solarized-tc=: Warm tones, good for coding
+    - =twilight=: Dark theme with warm accents
+
+*** For Kanagawa Theme  
+    - =zenburn=: Muted, low-contrast theme
+    - =gruvbox-tc=: Earthy tones that complement Kanagawa
+    - =solarized-tc=: Can work with both themes
+
+** Creating Custom Colorschemes
+
+*** Example: Custom Rouge Colorscheme
+    Create =~/.config/micro/colorschemes/rouge.micro=:
+
+    #+BEGIN_SRC lua
+    palette = {
+        ["bg"] = "#1f1f28",
+        ["fg"] = "#dcd7ba",
+        ["red"] = "#8C3A3A",
+        ["green"] = "#5A8E7F", 
+        ["yellow"] = "#B8A26D",
+        ["blue"] = "#2D4F67",
+        ["magenta"] = "#957FB8",
+        ["cyan"] = "#7FB4CA",
+        ["orange"] = "#A67A5B"
+    }
+
+    -- Syntax highlighting colors
+    colors = {
+        ["default"] = {"fg", "bg"},
+        ["identifier"] = {"fg", "bg"},
+        ["statement"] = {"red", "bg"},
+        ["preproc"] = {"orange", "bg"},
+        ["type"] = {"yellow", "bg"},
+        ["special"] = {"orange", "bg"},
+        ["constant"] = {"green", "bg"},
+        ["comment"] = {"cyan", "bg"},
+        ["string"] = {"green", "bg"},
+        ["number"] = {"magenta", "bg"},
+        ["line-number"] = {"blue", "bg"},
+        ["cursor-line"] = {"fg", "#363646"},
+        ["status-line"] = {"bg", "red"},
+        ["tab-bar"] = {"bg", "bg"},
+        ["tab-active"] = {"fg", "red"},
+        ["tab-inactive"] = {"fg", "bg"},
+        ["divider"] = {"blue", "bg"},
+        ["scrollbar"] = {"blue", "bg"},
+        ["selected"] = {"bg", "blue"},
+        ["search"] = {"bg", "yellow"},
+        ["error"] = {"red", "bg"}
+    }
+    #+END_SRC
+
+** Usage Commands
+
+*** Theme Switching
+    #+BEGIN_SRC bash
+    theme-switcher rouge      # Switch to Rouge theme
+    theme-switcher kanagawa   # Switch to Kanagawa theme
+    theme-switcher next       # Cycle to next theme
+    #+END_SRC
+
+*** Micro Internal Commands
+    #+BEGIN_SRC bash
+    # Change colorscheme temporarily
+    Ctrl+e then: set colorscheme dukedark-tc
+    
+    # Reload configuration
+    Ctrl+e then: source ~/.config/micro/settings.json
+    #+END_SRC
+
+** Troubleshooting
+
+*** Colorscheme Not Changing
+    - Check if colorscheme file exists and contains the colorscheme name
+    - Verify micro settings.json has proper permissions
+    - Restart micro after theme change
+
+*** JSON Parsing Errors
+    - Install jq for reliable JSON manipulation
+    - Ensure settings.json is valid JSON
+    - Backup settings.json before modifications
+
+*** Colorscheme Not Available
+    - List available colorschemes: `micro -colorscheme [TAB]`
+    - Install additional colorschemes from micro plugin channel
+    - Create custom colorscheme files in ~/.config/micro/colorschemes/
+
+This configuration provides a complete, theme-ready Micro editor setup that integrates seamlessly with your theme switching system!
+```
